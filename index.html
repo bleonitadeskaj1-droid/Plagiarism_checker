@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analizator Plagjiature</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #E24B4A;
+      --red-dark: #A32D2D;
+      --red-light: #FCEBEB;
+      --red-border: #F7C1C1;
+      --bg: #f5f5f5;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --success: #166534;
+      --success-bg: #dcfce7;
+      --warning: #854d0e;
+      --warning-bg: #fef9c3;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'IBM Plex Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--red);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-left svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2; }
+    .header-left h1 { font-size: 18px; font-weight: 600; color: #fff; }
+    .header-left p { font-size: 12px; color: rgba(255,255,255,0.75); }
+    .header-right { font-size: 12px; color: rgba(255,255,255,0.8); }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+
+    .card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.5rem; }
+    .card-title { font-size: 14px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; }
+
+    /* ── STATS ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; max-width: 1100px; margin: 0 auto 1.5rem; padding: 0 1.5rem; }
+    @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    .stat-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 1rem 1.25rem; }
+    .stat-card .val { font-size: 28px; font-weight: 600; color: var(--red); }
+    .stat-card .lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* ── UPLOAD ── */
+    .upload-zone {
+      border: 2px dashed var(--red-border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      background: var(--red-light);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 1.25rem;
+    }
+    .upload-zone:hover { border-color: var(--red); }
+    .upload-zone.dragover { border-color: var(--red); background: #fde8e8; }
+    .upload-zone svg { width: 36px; height: 36px; stroke: var(--red); fill: none; stroke-width: 1.5; margin-bottom: 8px; }
+    .upload-zone p { font-size: 14px; color: var(--red-dark); font-weight: 500; }
+    .upload-zone span { font-size: 12px; color: var(--muted); }
+    #file-name { font-size: 13px; color: var(--red-dark); margin-top: 8px; font-weight: 500; }
+
+    /* ── FORM ── */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    label { font-size: 12px; color: var(--muted); font-weight: 500; }
+    input, select, textarea {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      width: 100%;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(226,75,74,0.12);
+    }
+
+    .checkbox-row { display: flex; gap: 1.5rem; margin-bottom: 1.25rem; }
+    .checkbox-row label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text); cursor: pointer; font-weight: 400; }
+    .checkbox-row input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--red); }
+
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 20px; border: none; border-radius: 8px;
+      font-size: 14px; font-weight: 500; font-family: inherit;
+      cursor: pointer; transition: background 0.15s, opacity 0.15s;
+    }
+    .btn-primary { background: var(--red); color: #fff; width: 100%; }
+    .btn-primary:hover { background: var(--red-dark); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── PROGRESS ── */
+    #progress-area { display: none; margin-top: 1rem; }
+    .progress-bar-wrap { background: var(--red-border); border-radius: 99px; height: 6px; overflow: hidden; margin: 8px 0; }
+    .progress-bar { background: var(--red); height: 100%; border-radius: 99px; transition: width 0.4s; }
+    #progress-text { font-size: 13px; color: var(--muted); }
+
+    /* ── THESIS LIST ── */
+    .thesis-list { display: flex; flex-direction: column; gap: 10px; }
+    .thesis-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .thesis-item:hover { border-color: var(--red); box-shadow: 0 0 0 3px rgba(226,75,74,0.08); }
+    .thesis-item .title { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .thesis-item .meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .thesis-item .score { font-size: 15px; font-weight: 600; color: var(--red); min-width: 40px; text-align: right; }
+
+    .badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+    .badge-danger  { background: var(--red-light); color: var(--red-dark); }
+    .badge-success { background: var(--success-bg); color: var(--success); }
+    .badge-warning { background: var(--warning-bg); color: var(--warning); }
+    .badge-gray    { background: #f3f4f6; color: #6b7280; }
+
+    .empty-state { text-align: center; padding: 2rem; color: var(--muted); font-size: 14px; }
+
+    /* ── RESULT PANEL ── */
+    #result-panel { display: none; }
+    .score-circle {
+      width: 100px; height: 100px; border-radius: 50%;
+      border: 6px solid var(--red-border);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    .score-circle .big { font-size: 26px; font-weight: 600; color: var(--red); }
+    .score-circle .small { font-size: 11px; color: var(--muted); }
+
+    .score-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 1rem 0; }
+    .score-item { background: var(--bg); border-radius: 8px; padding: 10px 14px; }
+    .score-item .s-val { font-size: 20px; font-weight: 600; color: var(--red); }
+    .score-item .s-lbl { font-size: 11px; color: var(--muted); }
+
+    .matches-list { display: flex; flex-direction: column; gap: 8px; margin-top: 1rem; }
+    .match-item { border: 1px solid var(--red-border); border-radius: 8px; padding: 10px 12px; background: var(--red-light); }
+    .match-item .m-source { font-size: 12px; font-weight: 500; color: var(--red-dark); margin-bottom: 4px; }
+    .match-item .m-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+    .match-item .m-score { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    .ai-summary { background: var(--bg); border-radius: 8px; padding: 1rem; font-size: 14px; line-height: 1.6; color: var(--text); margin-top: 1rem; border-left: 3px solid var(--red); }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      background: var(--text); color: #fff;
+      padding: 10px 18px; border-radius: 8px;
+      font-size: 13px; display: none; z-index: 999;
+      animation: fadeIn 0.2s;
+    }
+    #toast.error { background: var(--red); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── LOADER ── */
+    .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .full-col { grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <div>
+      <h1>Analizator Plagjiature</h1>
+      <p>Sistem i zbulimit të plagjiaturës për tema diplomash</p>
+    </div>
+  </div>
+  <div class="header-right" id="api-status">⬤ Duke u lidhur...</div>
+</div>
+
+<!-- STATS -->
+<div class="stats-grid" id="stats-grid">
+  <div class="stat-card"><div class="val" id="s-total">—</div><div class="lbl">Tema gjithsej</div></div>
+  <div class="stat-card"><div class="val" id="s-flagged">—</div><div class="lbl">Të flamëruara</div></div>
+  <div class="stat-card"><div class="val" id="s-completed">—</div><div class="lbl">Të analizuara</div></div>
+  <div class="stat-card"><div class="val" id="s-pending">—</div><div class="lbl">Në pritje</div></div>
+</div>
+
+<div class="container">
+
+  <!-- LEFT: UPLOAD -->
+  <div>
+    <div class="card">
+      <div class="card-title">Ngarko temë të re</div>
+
+      <div class="upload-zone" id="upload-zone">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p>Tërhiq skedarin këtu ose kliko</p>
+        <span>PDF, DOCX ose TXT · Maks 20MB</span>
+        <div id="file-name"></div>
+        <input type="file" id="file-input" accept=".pdf,.docx,.txt" style="display:none">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inp-title">Titulli i temës *</label>
+          <input type="text" id="inp-title" placeholder="p.sh. Inteligjenca Artificiale...">
+        </div>
+        <div class="form-group">
+          <label for="inp-student">ID Studenti</label>
+          <input type="number" id="inp-student" placeholder="p.sh. 1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inp-dept">Departamenti</label>
+          <select id="inp-dept">
+            <option value="">— Zgjidh —</option>
+            <option>Programim</option>
+            <option>Programim dhe AI</option>
+            <option>Programim dhe Multimedia</option>
+            <option>Programim i Lojerave Kompjuterike</option>
+            <option>Siguri Kibernetike</option>
+                        <option>Specializim ne Inxhinieri Softuerike</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="inp-year">Viti</label>
+          <input type="number" id="inp-year" placeholder="2024" value="2024">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:1rem">
+        <label for="inp-supervisor">Mentori</label>
+        <input type="text" id="inp-supervisor" placeholder="Prof. Emri Mbiemri">
+      </div>
+
+      <div class="checkbox-row">
+        <label><input type="checkbox" id="chk-internal" checked> Krahaso me databazën</label>
+        <label><input type="checkbox" id="chk-web" checked> Kërko në internet</label>
+      </div>
+
+      <button class="btn btn-primary" id="btn-upload" onclick="uploadAndAnalyze()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Ngarko dhe Analizо
+      </button>
+
+      <div id="progress-area">
+        <div id="progress-text">Duke ngarkuar skedarin...</div>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- RESULT PANEL -->
+    <div class="card" id="result-panel" style="margin-top:1.5rem">
+      <div class="card-title">Rezultati i Analizës</div>
+      <div class="score-circle" id="score-circle">
+        <div class="big" id="res-score">—</div>
+        <div class="small">plagjiaturë</div>
+      </div>
+      <div style="text-align:center;margin-bottom:0.5rem">
+        <span class="badge" id="res-badge">—</span>
+      </div>
+      <div class="score-breakdown">
+        <div class="score-item"><div class="s-val" id="res-internal">—</div><div class="s-lbl">Brendshme</div></div>
+        <div class="score-item"><div class="s-val" id="res-web">—</div><div class="s-lbl">Nga interneti</div></div>
+      </div>
+      <div class="ai-summary" id="res-summary"></div>
+      <div class="matches-list" id="res-matches"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: THESIS LIST -->
+  <div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+        <div class="card-title" style="margin-bottom:0">Temat e ngarkuara</div>
+        <button class="btn" style="padding:6px 14px;border:1px solid var(--border);font-size:12px" onclick="loadTheses()">
+          ↺ Rifresko
+        </button>
+      </div>
+      <div id="thesis-list">
+        <div class="empty-state">Duke ngarkuar...</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+  // ── KONFIGURIM ──
+  // Use relative API path so frontend works when served from the same host
+  const BACKEND_ORIGIN = (() => {
+    const origin = window.location.origin;
+    if (origin && origin !== 'null' && origin.includes(':8000')) return origin;
+    return 'http://localhost:8000';
+  })();
+  const API = `${BACKEND_ORIGIN}/api`;
+  const AUTH_TOKEN_KEYS = ['admin_token', 'stu_token', 'prof_token'];
+
+  function getStoredToken() {
+    for (const key of AUTH_TOKEN_KEYS) {
+      const token = localStorage.getItem(key);
+      if (token) return token;
+    }
+    return '';
+  }
+
+  // ── UPLOAD ZONE ──
+  const uploadZone = document.getElementById('upload-zone');
+  const fileInput  = document.getElementById('file-input');
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) {
+      document.getElementById('file-name').textContent = '📄 ' + fileInput.files[0].name;
+    }
+  });
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer.files[0]) {
+      fileInput.files = e.dataTransfer.files;
+      document.getElementById('file-name').textContent = '📄 ' + e.dataTransfer.files[0].name;
+    }
+  });
+
+  // ── NGARKO DHE ANALIZО ──
+  async function uploadAndAnalyze() {
+    const file  = fileInput.files[0];
+    const title = document.getElementById('inp-title').value.trim();
+
+    if (!file)  return showToast('Zgjidh një skedar!', true);
+    if (!title) return showToast('Shkruaj titullin e temës!', true);
+
+    const btn = document.getElementById('btn-upload');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Duke ngarkuar...';
+
+    showProgress(10, 'Duke ngarkuar skedarin...');
+    document.getElementById('result-panel').style.display = 'none';
+
+    try {
+      // 1. UPLOAD TEMA
+      const form = new FormData();
+      form.append('file', file);
+      form.append('title', title);
+      form.append('department', document.getElementById('inp-dept').value);
+      form.append('year', document.getElementById('inp-year').value);
+      form.append('supervisor', document.getElementById('inp-supervisor').value);
+      const sid = document.getElementById('inp-student').value;
+      if (sid) form.append('student_id', sid);
+
+      const upRes = await fetch(`${API}/theses/upload`, { method: 'POST', body: form });
+      if (!upRes.ok) {
+        const err = await upRes.json();
+        throw new Error(err.detail || 'Gabim gjatë ngarkimit');
+      }
+      const upData = await upRes.json();
+      const thesisId = upData.thesis_id;
+
+      showProgress(40, 'Tema u ngarkua. Duke filluar analizën...');
+
+      // 2. FILLO ANALIZËN
+      const anaRes = await fetch(`${API}/analysis/start`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          thesis_id: thesisId,
+          compare_internal: document.getElementById('chk-internal').checked,
+          search_web: document.getElementById('chk-web').checked
+        })
+      });
+      if (!anaRes.ok) throw new Error('Gabim gjatë fillimit të analizës');
+      const anaData = await anaRes.json();
+      const resultId = anaData.result_id;
+
+      showProgress(60, 'AI po analizon... Kjo mund të marrë 30-60 sekonda.');
+
+      // 3. PRIT REZULTATIN (polling)
+      const result = await pollResult(resultId);
+
+      showProgress(100, 'Analiza u përfundua!');
+      displayResult(result);
+      loadTheses();
+      loadStats();
+
+    } catch (err) {
+      showToast(err.message, true);
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Ngarko dhe Analizо';
+      setTimeout(() => { document.getElementById('progress-area').style.display = 'none'; }, 2000);
+    }
+  }
+
+  // ── POLLING ──
+  async function pollResult(resultId, attempts = 0) {
+    if (attempts > 40) throw new Error('Analiza mori shumë kohë. Provo përsëri.');
+
+    const res = await fetch(`${API}/analysis/result/${resultId}`);
+    if (!res.ok) throw new Error('Gabim gjatë leximit të rezultatit');
+    const data = await res.json();
+
+    if (data.status === 'completed') return data;
+    if (data.status === 'error') throw new Error('Analiza dështoi. Kontrollo konsolën.');
+
+    await new Promise(r => setTimeout(r, 3000));
+    return pollResult(resultId, attempts + 1);
+  }
+
+  // ── SHFAQ REZULTATIN ──
+  function displayResult(data) {
+    document.getElementById('result-panel').style.display = 'block';
+
+    const score = Math.round(data.overall_score);
+    document.getElementById('res-score').textContent = score + '%';
+    document.getElementById('res-internal').textContent = Math.round(data.internal_score) + '%';
+    document.getElementById('res-web').textContent = Math.round(data.web_score) + '%';
+    document.getElementById('res-summary').textContent = data.summary || 'Nuk ka përmbledhje.';
+
+    // Badge dhe ngjyra sipas rrezikut
+    const badge = document.getElementById('res-badge');
+    const circle = document.getElementById('score-circle');
+    if (score >= 50) {
+      badge.textContent = '⚠ Plagjiaturë e Lartë'; badge.className = 'badge badge-danger';
+      circle.style.borderColor = 'var(--red)';
+    } else if (score >= 25) {
+      badge.textContent = '⚡ Plagjiaturë Mesatare'; badge.className = 'badge badge-warning';
+      circle.style.borderColor = '#f59e0b';
+    } else {
+      badge.textContent = '✓ Kaloi Testin'; badge.className = 'badge badge-success';
+      circle.style.borderColor = '#22c55e';
+    }
+
+    // Ndeshjet
+    const matchesDiv = document.getElementById('res-matches');
+    matchesDiv.innerHTML = '';
+    if (data.matches && data.matches.length > 0) {
+      const title = document.createElement('div');
+      title.style.cssText = 'font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px';
+      title.textContent = `${data.matches.length} ndeshje të gjetura:`;
+      matchesDiv.appendChild(title);
+
+      data.matches.forEach(m => {
+        const el = document.createElement('div');
+        el.className = 'match-item';
+        el.innerHTML = `
+          <div class="m-source">
+            ${m.source_type === 'web' ? '🌐 ' + (m.source_title || m.source_url || 'Web') : '📚 ' + (m.source_title || 'Databaza e brendshme')}
+          </div>
+          <div class="m-text">${(m.matched_text || '').substring(0, 200)}${m.matched_text && m.matched_text.length > 200 ? '...' : ''}</div>
+          <div class="m-score">Ngjashmëri: ${Math.round(m.similarity_score)}%</div>
+        `;
+        matchesDiv.appendChild(el);
+      });
+    }
+
+    document.getElementById('result-panel').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ── LISTA E TEMAVE ──
+  async function loadTheses() {
+    const container = document.getElementById('thesis-list');
+    const token = getStoredToken();
+    if (!token) {
+      container.innerHTML = '<div class="empty-state">Kyçu për të parë temat e ngarkuara.</div>';
+      return;
+    }
+    try {
+      const res = await fetch(`${API}/theses/?limit=20`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+
+      if (!data.items || data.items.length === 0) {
+        container.innerHTML = '<div class="empty-state">Nuk ka tema të ngarkuara ende.</div>';
+        return;
+      }
+
+      container.innerHTML = '<div class="thesis-list">' +
+        data.items.map(t => `
+          <div class="thesis-item" onclick="loadThesisResult(${t.id})">
+            <div style="flex:1;min-width:0">
+              <div class="title">${t.title}</div>
+              <div class="meta">${t.department || '—'} · ${t.year || '—'}</div>
+            </div>
+            <span class="badge ${statusBadge(t.status)}">${statusLabel(t.status)}</span>
+          </div>
+        `).join('') +
+      '</div>';
+    } catch {
+      container.innerHTML = '<div class="empty-state">Nuk u ngarkuan të dhënat e temave.</div>';
+    }
+  }
+
+  async function loadThesisResult(thesisId) {
+    try {
+      const statusRes = await fetch(`${API}/analysis/thesis/${thesisId}/status`);
+      if (!statusRes.ok) return;
+      const statusData = await statusRes.json();
+      if (!statusData.result_id) {
+        showToast('Kjo temë nuk është analizuar ende.', true);
+        return;
+      }
+      const res = await fetch(`${API}/analysis/result/${statusData.result_id}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.status === 'completed') {
+        displayResult(data);
+        showToast('Rezultati u ngarkua!');
+      } else {
+        showToast('Analiza nuk është përfunduar.', true);
+      }
+    } catch {
+      showToast('Gabim gjatë ngarkimit të rezultatit.', true);
+    }
+  }
+
+  // ── STATISTIKAT ──
+  async function loadStats() {
+    const token = getStoredToken();
+    if (!token) return;
+    try {
+      const res = await fetch(`${API}/theses/?limit=200`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      const items = data.items || [];
+      document.getElementById('s-total').textContent = data.total || items.length;
+      document.getElementById('s-flagged').textContent = items.filter(t => t.status === 'flagged').length;
+      document.getElementById('s-completed').textContent = items.filter(t => t.status === 'completed').length;
+      document.getElementById('s-pending').textContent = items.filter(t => t.status === 'pending').length;
+    } catch { /* silent */ }
+  }
+
+  // ── KONTROLLO LIDHJEN ──
+  async function checkConnection() {
+    const el = document.getElementById('api-status');
+    try {
+      const res = await fetch(`${BACKEND_ORIGIN}/health`);
+      if (res.ok) {
+        el.textContent = '⬤ Backend i lidhur';
+        el.style.color = '#86efac';
+      } else throw new Error();
+    } catch {
+      el.textContent = '⬤ Backend jo i lidhur';
+      el.style.color = '#fca5a5';
+    }
+  }
+
+  // ── HELPERS ──
+  function showProgress(pct, text) {
+    document.getElementById('progress-area').style.display = 'block';
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = text;
+  }
+
+  function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = isError ? 'error' : '';
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 3500);
+  }
+
+  function statusLabel(s) {
+    return { pending: 'Në pritje', analyzing: 'Duke u analizuar', completed: 'Kaloi', flagged: 'Flamëruar' }[s] || s;
+  }
+  function statusBadge(s) {
+    return { pending: 'badge-gray', analyzing: 'badge-warning', completed: 'badge-success', flagged: 'badge-danger' }[s] || 'badge-gray';
+  }
+
+  // ── INIT ──
+  checkConnection();
+  loadTheses();
+  loadStats();
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+UNIVERSITETI I PRISHTINËS
+FAKULTETI I SHKENCAVE KOMPJUTERIKE
+
+TEMA E DIPLOMËS
+
+Titulli: Inteligjenca Artificiale dhe Zbatimi i saj në Industri
+
+Studenti: Artan Berisha
+Nr. Indeksit: 2019/CS/0142
+Mentori: Prof. Dr. Agim Musliu
+Viti Akademik: 2023/2024
+
+═══════════════════════════════════════
+
+ABSTRAKT
+
+Inteligjenca artificiale (AI) është degë e shkencës kompjuterike që merret me ndërtimin e sistemeve inteligjente që kryejnë detyra të cilat normalisht kërkojnë inteligjencë njerëzore. Inteligjenca artificiale (AI) është degë e shkencës kompjuterike që merret me ndërtimin e sistemeve inteligjente. Sistemet e inteligjencës artificiale janë duke u bërë gjithnjë e më të rëndësishme në botën moderne.
+
+Në këtë punim do të shqyrtojmë zbatimin e inteligjencës artificiale në sektorin industrial, me fokus të veçantë në prodhim, shëndetësi dhe financa.
+
+═══════════════════════════════════════
+
+KAPITULLI 1: HYRJE
+
+Inteligjenca artificiale (AI) i referohet simulimit të proceseve të inteligjencës njerëzore nga sistemet kompjuterike. Këto procese përfshijnë të mësuarit (blerjen e informacionit dhe rregullave për përdorimin e informacionit), arsyetimin (përdorimin e rregullave për të arritur në përfundime të përafërta ose të caktuara) dhe vetë-korrigjimin.
+
+Aplikacionet e veçanta të AI-it përfshijnë sistemet e ekspertëve, përpunimin e gjuhës natyrore, njohjen e të folurit dhe vizionin artificial. AI mund të kategorizohet si i dobët ose i fortë. AI i dobët, i njohur gjithashtu si AI i ngushtë, është projektuar dhe trajnuar për një detyrë të veçantë. AI i fortë, i njohur gjithashtu si inteligjencë artificiale e përgjithshme, ka aftësi njohëse të përgjithësuara njerëzore.
+
+Historiku i AI-it:
+Termi "inteligjencë artificiale" u krijua nga John McCarthy në vitin 1956. Që nga ajo kohë, AI ka kaluar nëpër disa cikle të entuziazmit dhe zhgënjimit, të njohura si "dimrat e AI-it". Sot, me rritjen e të dhënave dhe fuqisë llogaritëse, AI po kalon nëpër një rilindje të madhe.
+
+Koncepti i inteligjencës artificiale ka qenë objekt studimi që nga mesi i shekullit të 20-të. Alan Turing, në letrën e tij të famshme të vitit 1950 "Computing Machinery and Intelligence", propozoi një test për të matur inteligjencën e makinave - Testi Turing. Sipas Turing, nëse një makinë mund të bindte një njeri se po komunikonte me njeri tjetër dhe jo me makinë, mund të konsiderohej inteligjente.
+
+═══════════════════════════════════════
+
+KAPITULLI 2: LLOJET E INTELIGJENCËS ARTIFICIALE
+
+2.1 Mësimi Makinerik (Machine Learning)
+
+Mësimi makinerik është nëndegë e inteligjencës artificiale që i jep sistemeve kompjuterike aftësinë për të mësuar dhe përmirësuar automatikisht nga përvoja pa u programuar shprehimisht. Mësimi makinerik fokusohet në zhvillimin e programeve kompjuterike që mund të hyjnë në të dhëna dhe t'i përdorin ato për të mësuar vetë.
+
+Procesi fillon me vëzhgime ose të dhëna, siç janë shembujt, përvojat direkte ose udhëzimet, për të kërkuar modele në të dhënat dhe marrjen e vendimeve më të mira në të ardhmen bazuar në shembujt që ofrojmë. Qëllimi kryesor është të lejojë kompjuterët të mësojnë automatikisht pa ndërhyrje njerëzore dhe të rregullojnë veprimet në përputhje me rrethanat.
+
+Llojet e mësimit makinerik:
+- Mësimi i mbikëqyrur (Supervised Learning): Algoritmi trajnohet në një grup të dhënash të etiketuara.
+- Mësimi pa mbikëqyrje (Unsupervised Learning): Algoritmi gjen modele në të dhënat pa etiketa.
+- Mësimi me përforcim (Reinforcement Learning): Algoritmi mëson duke marrë shpërblime dhe ndëshkime.
+
+Mësimi i mbikëqyrur është metoda më e zakonshme e mësimit makinerik. Në këtë metodë, algoritmi trajnohet me të dhëna të etiketuara ku çdo hyrje ka një dalje përkatëse. Qëllimi është që algoritmi të mësojë funksionin e hartimit nga hyrjet në daljet, në mënyrë që kur t'i jepen të dhëna të reja pa etiketa, ai të mund të parashikojë daljjet e sakta.
+
+2.2 Rrjetet Neuronale (Neural Networks)
+
+Rrjetet neuronale artificiale janë sisteme llogaritëse të frymëzuara nga rrjetet neuronale biologjike që përbëjnë trurin e kafshëve. Sistemi mëson të kryejë detyra duke marrë parasysh shembujt, përgjithësisht pa u programuar me rregulla specifike të detyrës. Rrjetet neuronale janë grup i algoritmeve, modeluar lirshëm pas trurit njerëzor, të dizajnuara për të njohur modelet. Ato interpretojnë të dhënat ndijore nëpërmjet llojit të perceptimit të makinës, etiketimit ose grupimit të të dhënave të papërpunuara.
+
+Modelet që rrjetet neuronale i njohin janë numerike, të përfshira në vektorë, në të cilët të gjitha të dhënat reale, qofshin imazhe, zë, tekst ose seri kohore, duhet të përkthehen.
+
+═══════════════════════════════════════
+
+KAPITULLI 3: ZBATIMI NË INDUSTRI
+
+3.1 Shëndetësia
+
+AI po revolucionarizojë kujdesin shëndetësor në mënyra të shumta. Inteligjenca artificiale në shëndetësi i referohet përdorimit të algoritmeve dhe softuerëve për të përafërsuar njohjen njerëzore në analizën e të dhënave komplekse mjekësore. Qëllimi kryesor i aplikacioneve të AI-it shëndetësor është analizimi i marrëdhënieve ndërmjet teknikave të parandalimit ose trajtimit dhe rezultateve të pacientëve.
+
+Programet e AI-it kanë qenë duke u aplikuar në praktika të diagnostikimit dhe trajtimit, menaxhimin e rrjedhës së punës mjekësore, gjithashtu edhe administratën spitalore. Inteligjenca artificiale mund të analizojë rrezikun e zhvillimit të sëmundjes, të informojë mënyrën sesi pacientët i menaxhojnë kushtet kronike, si dhe të ofrojë forma të reja vizualizimi mjekësor.
+
+3.2 Financat
+
+Sektori financiar po pranon gjerësisht inteligjencën artificiale. AI dhe mësimi makinerik prijnë transformimin e industrisë financiare, duke ndryshuar mënyrën se si institucionet financiare marrin vendime.
+
+Zbatimet kryesore përfshijnë:
+- Zbulimin e mashtrimit: Algoritmet e AI mund të zbulojnë modele të pazakonta në transaksionet financiare
+- Tregtinë algoritmike: Sistemet e AI mund të ekzekutojnë tregtime me shpejtësi dhe frekuencë të pamundur për tregtarët njerëzorë
+- Menaxhimin e rrezikut: Modelet e AI analizojnë sasinë e madhe të të dhënave për të vlerësuar rrezikun
+
+═══════════════════════════════════════
+
+KAPITULLI 4: PËRFUNDIME
+
+Inteligjenca artificiale po transformon çdo aspekt të shoqërisë moderne. Nga shëndetësia deri në financa, nga transporti deri në arsim, AI po krijon mundësi të reja dhe po zgjidhë probleme komplekse.
+
+Megjithatë, zhvillimi i AI-it sjell edhe sfida etike dhe shoqërore që duhen adresuar. Çështjet e privatësisë, paragjykimit algoritmik dhe zëvendësimit të vendeve të punës janë shqetësime legjitime.
+
+Në të ardhmen, bashkëpunimi ndërmjet njerëzve dhe sistemeve të AI-it do të jetë çelësi i suksesit. Inteligjenca artificiale duhet të shihet si mjet për të amplifikuar aftësitë njerëzore, jo për t'i zëvendësuar ato.
+
+REFERENCAT:
+[1] Russell, S., & Norvig, P. (2020). Artificial Intelligence: A Modern Approach (4th ed.). Pearson.
+[2] McCarthy, J. (1956). The Dartmouth Conference Proposal.
+[3] Turing, A. M. (1950). Computing Machinery and Intelligence. Mind, 59(236), 433-460.
+[4] Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep Learning. MIT Press.
+[5] Wikipedia. (2024). Artificial Intelligence. https://en.wikipedia.org/wiki/Artificial_intelligence
+[6] Wikipedia. (2024). Machine Learning. https://en.wikipedia.org/wiki/Machine_learning

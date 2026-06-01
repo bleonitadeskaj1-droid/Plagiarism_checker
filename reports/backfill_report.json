@@ -1,0 +1,97 @@
+{
+  "dry_run": false,
+  "professor_profiles_found": 3,
+  "student_profiles_found": 5,
+  "theses_processed": 9,
+  "integrity": {
+    "total_theses": 9,
+    "missing_owner": 0,
+    "missing_professor": 0,
+    "orphan_student_link": 0,
+    "orphan_professor_link": 0
+  },
+  "unresolved": [],
+  "resolved": [
+    {
+      "thesis_id": 1,
+      "title": "FrogGame",
+      "submitted_by_user_id": 4,
+      "assigned_professor_id": 15,
+      "owner_strategy": "existing",
+      "professor_strategy": "existing",
+      "notes": []
+    },
+    {
+      "thesis_id": 2,
+      "title": "Review Workflow Test",
+      "submitted_by_user_id": 6,
+      "assigned_professor_id": 14,
+      "owner_strategy": "existing",
+      "professor_strategy": "existing",
+      "notes": []
+    },
+    {
+      "thesis_id": 3,
+      "title": "Studim Rasti",
+      "submitted_by_user_id": 10,
+      "assigned_professor_id": 15,
+      "owner_strategy": "existing",
+      "professor_strategy": "existing",
+      "notes": []
+    },
+    {
+      "thesis_id": 4,
+      "title": "Secure Upload Test",
+      "submitted_by_user_id": 6,
+      "assigned_professor_id": 13,
+      "owner_strategy": "existing",
+      "professor_strategy": "existing",
+      "notes": []
+    },
+    {
+      "thesis_id": 5,
+      "title": "Admin Smoke Thesis",
+      "submitted_by_user_id": 3,
+      "assigned_professor_id": 13,
+      "owner_strategy": "existing",
+      "professor_strategy": "existing",
+      "notes": []
+    },
+    {
+      "thesis_id": 6,
+      "title": "FrogGame",
+      "submitted_by_user_id": 10,
+      "assigned_professor_id": 15,
+      "owner_strategy": "existing",
+      "professor_strategy": "existing",
+      "notes": []
+    },
+    {
+      "thesis_id": 7,
+      "title": "Studim Rasti",
+      "submitted_by_user_id": 4,
+      "assigned_professor_id": 15,
+      "owner_strategy": "existing",
+      "professor_strategy": "existing",
+      "notes": []
+    },
+    {
+      "thesis_id": 8,
+      "title": "Oslo",
+      "submitted_by_user_id": 9,
+      "assigned_professor_id": 15,
+      "owner_strategy": "existing",
+      "professor_strategy": "existing",
+      "notes": []
+    },
+    {
+      "thesis_id": 9,
+      "title": "Prezantimi",
+      "submitted_by_user_id": 10,
+      "assigned_professor_id": 15,
+      "owner_strategy": "existing",
+      "professor_strategy": "existing",
+      "notes": []
+    }
+  ]
+}

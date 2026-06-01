@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universiteti AAB — Sistemi i Analizës së Plagjiaturës</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red:       #C63F3F;
+      --red2:      #E05555;
+      --red3:      #A52D2D;
+      --red-deep:  #6B1414;
+      --red-light: #FDEAEA;
+      --red-mid:   #F5C5C5;
+      --gold:      #C9A84C;
+      --gold2:     #E8C97A;
+      --cream:     #FDF8F3;
+      --smoke:     #F0E8E0;
+      --white:     #FFFFFF;
+      --text:      #1A0A0A;
+      --muted:     #8A6A6A;
+      --ff-display: 'Cormorant Garamond', Georgia, serif;
+      --ff-body:    'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--ff-body); background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      opacity: .5;
+    }
+
+    /* ══ NAV ══ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 90;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw; height: 72px;
+      background: rgba(90,15,15,.97);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(198,63,63,.3);
+      box-shadow: 0 4px 32px rgba(90,15,15,.4);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .nav-logo-mark {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, var(--red) 0%, var(--red3) 100%);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--ff-display); font-size: 16px; font-weight: 600;
+      color: var(--white); border: 1px solid rgba(255,255,255,.15);
+      box-shadow: 0 4px 12px rgba(198,63,63,.5);
+      overflow: hidden;
+    }
+    .nav-logo-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .nav-logo-text .t1 { font-family: var(--ff-display); font-size: 17px; font-weight: 600; color: var(--white); letter-spacing: .02em; }
+    .nav-logo-text .t2 { font-size: 10px; font-weight: 300; color: rgba(255,255,255,.45); letter-spacing: .14em; text-transform: uppercase; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 13px; font-weight: 400; color: rgba(255,255,255,.6); text-decoration: none; letter-spacing: .04em; transition: color .2s; }
+    .nav-links a:hover { color: var(--gold2); }
+    .nav-cta {
+      background: linear-gradient(135deg, var(--gold) 0%, #A8781A 100%) !important;
+      color: var(--white) !important; font-weight: 500 !important;
+      padding: 9px 22px; border-radius: 6px;
+      box-shadow: 0 3px 12px rgba(201,168,76,.3);
+      transition: opacity .2s !important;
+    }
+    .nav-cta:hover { opacity: .85 !important; }
+
+    /* ══ HERO ══ */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 120px 5vw 80px; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: linear-gradient(150deg, var(--red-deep) 0%, var(--red3) 30%, var(--red) 65%, #D94F4F 100%);
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 85% 30%, rgba(230,100,100,.25) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 60% at 5%  75%, rgba(60,5,5,.5)        0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 50% 100%, rgba(201,168,76,.08)  0%, transparent 50%);
+    }
+    .hero-lines {
+      position: absolute; inset: 0; z-index: 1; overflow: hidden; pointer-events: none;
+    }
+    .hero-lines svg { position: absolute; width: 100%; height: 100%; }
+
+    .hero-dots {
+      position: absolute; right: 5vw; top: 50%;
+      transform: translateY(-50%); z-index: 1;
+      display: grid; grid-template-columns: repeat(12,1fr); gap: 18px;
+      opacity: .12;
+    }
+    .hero-dots span { width: 3px; height: 3px; border-radius: 50%; background: var(--white); display: block; }
+
+    .hero-content { position: relative; z-index: 2; max-width: 700px; }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: rgba(255,255,255,.9);
+      margin-bottom: 28px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      padding: 7px 18px; border-radius: 20px;
+      animation: fadeInUp .7s ease both;
+    }
+    .hero-eyebrow::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--gold2);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
+
+    .hero-title {
+      font-family: var(--ff-display);
+      font-size: clamp(46px, 6.5vw, 86px);
+      font-weight: 300; line-height: 1.06;
+      color: var(--white); margin-bottom: 8px;
+      letter-spacing: -.01em;
+      animation: fadeInUp .7s .1s ease both;
+    }
+    .hero-title em { font-style: italic; color: var(--gold2); }
+    .hero-title .line2 { font-weight: 600; display: block; }
+
+    .hero-sub {
+      font-size: 16px; font-weight: 300;
+      color: rgba(255,255,255,.65); line-height: 1.75;
+      max-width: 480px; margin-bottom: 48px;
+      animation: fadeInUp .7s .22s ease both;
+    }
+    .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; animation: fadeInUp .7s .34s ease both; }
+
+    .btn-hero-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 36px;
+      background: var(--white); color: var(--red3);
+      font-family: var(--ff-body); font-size: 15px; font-weight: 600;
+      border: none; border-radius: 6px; cursor: pointer; text-decoration: none;
+      letter-spacing: .02em;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 6px 28px rgba(0,0,0,.25);
+    }
+    .btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(0,0,0,.3); }
+    .btn-hero-primary svg { width: 16px; height: 16px; stroke: var(--red3); fill: none; stroke-width: 2.5; }
+
+    .btn-hero-ghost {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 15px 32px;
+      background: rgba(255,255,255,.1); color: rgba(255,255,255,.9);
+      font-family: var(--ff-body); font-size: 15px; font-weight: 400;
+      border: 1px solid rgba(255,255,255,.25); border-radius: 6px;
+      cursor: pointer; text-decoration: none; letter-spacing: .02em;
+      transition: background .2s, border-color .2s;
+    }
+    .btn-hero-ghost:hover { background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.45); }
+
+    .hero-stats { position: absolute; z-index: 2; right: 8vw; bottom: 12%; display: flex; flex-direction: column; gap: 12px; animation: fadeInUp .7s .5s ease both; }
+    .stat-badge {
+      background: rgba(255,255,255,.08); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.15);
+      border-left: 3px solid var(--gold);
+      border-radius: 12px; padding: 16px 22px; min-width: 164px;
+      animation: floatUp 6s ease-in-out infinite;
+    }
+    .stat-badge:nth-child(2) { animation-delay: -2s; }
+    .stat-badge:nth-child(3) { animation-delay: -4s; }
+    @keyframes floatUp { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+    .stat-badge .num { font-family: var(--ff-display); font-size: 32px; font-weight: 600; color: var(--gold2); line-height: 1; }
+    .stat-badge .lbl { font-size: 11px; color: rgba(255,255,255,.5); letter-spacing: .06em; margin-top: 4px; }
+
+    .scroll-hint {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: rgba(255,255,255,.3); font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, rgba(255,255,255,.3), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+    @keyframes scrollPulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+    /* ══ ABOUT ══ */
+    .section-about {
+      padding: 120px 5vw; display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+      align-items: center; position: relative; z-index: 1;
+    }
+    .section-about::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
+      opacity: .5;
+    }
+    .about-label {
+      font-size: 10px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 20px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .about-label::before { content: ''; width: 20px; height: 2px; background: var(--red); border-radius: 2px; }
+    .about-title { font-family: var(--ff-display); font-size: clamp(30px, 4vw, 50px); font-weight: 300; line-height: 1.15; color: var(--text); margin-bottom: 24px; }
+    .about-title strong { font-weight: 600; color: var(--red); }
+    .about-text { font-size: 15px; font-weight: 300; line-height: 1.8; color: #5A3030; margin-bottom: 16px; }
+
+    .about-card-main {
+      background: linear-gradient(145deg, var(--red3) 0%, var(--red-deep) 100%);
+      border-radius: 16px; overflow: hidden; aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .about-card-main::after {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 70%, rgba(201,168,76,.15), transparent 55%),
+        radial-gradient(ellipse at 90% 15%, rgba(255,100,100,.2),  transparent 45%);
+    }
+    .about-icon-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; padding: 40px; width: 100%; position: relative; z-index: 1; }
+    .about-icon-item { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+    .about-icon-box {
+      width: 48px; height: 48px; border: 1px solid rgba(255,255,255,.2);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,.08); transition: background .25s, border-color .25s;
+    }
+    .about-icon-item:hover .about-icon-box { background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.4); }
+    .about-icon-box svg { width: 22px; height: 22px; stroke: rgba(255,255,255,.85); fill: none; stroke-width: 1.5; }
+    .about-icon-item span { font-size: 11px; color: rgba(255,255,255,.5); line-height: 1.3; }
+
+    .about-image { position: relative; }
+    .about-float-badge {
+      position: absolute; bottom: -20px; right: -20px;
+      background: linear-gradient(135deg, var(--gold) 0%, #A8781A 100%);
+      color: var(--white); border-radius: 12px; padding: 20px 24px;
+      font-family: var(--ff-display); box-shadow: 0 12px 40px rgba(201,168,76,.4);
+    }
+    .about-float-badge .n { font-size: 36px; font-weight: 600; line-height: 1; }
+    .about-float-badge .l { font-size: 12px; font-weight: 400; opacity: .85; margin-top: 4px; }
+
+    /* ══ FEATURES ══ */
+    .section-features {
+      padding: 100px 5vw;
+      background: linear-gradient(160deg, var(--red-deep) 0%, var(--red3) 50%, #B03535 100%);
+      position: relative; overflow: hidden;
+    }
+    .section-features::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,160,160,.08), transparent);
+    }
+    .features-header { text-align: center; margin-bottom: 72px; position: relative; z-index: 1; }
+    .features-header .label { font-size: 10px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .features-header h2 { font-family: var(--ff-display); font-size: clamp(32px,4vw,52px); font-weight: 300; color: var(--white); line-height: 1.1; }
+    .features-header h2 em { font-style: italic; color: var(--gold2); }
+
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 2px;
+      position: relative; z-index: 1;
+      border: 1px solid rgba(255,255,255,.1); border-radius: 16px; overflow: hidden;
+    }
+    .feat-card {
+      padding: 40px 36px;
+      background: rgba(255,255,255,.04);
+      border-right: 1px solid rgba(255,255,255,.08);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      transition: background .25s; cursor: default;
+    }
+    .feat-card:hover { background: rgba(255,255,255,.09); }
+    .feat-card:nth-child(3n) { border-right: none; }
+    .feat-card:nth-child(n+4) { border-bottom: none; }
+    .feat-num { font-family: var(--ff-display); font-size: 13px; color: var(--gold); opacity: .7; letter-spacing: .06em; margin-bottom: 24px; }
+    .feat-icon {
+      width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.2); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+      transition: border-color .25s, background .25s;
+    }
+    .feat-card:hover .feat-icon { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.4); }
+    .feat-icon svg { width: 20px; height: 20px; stroke: rgba(255,255,255,.8); fill: none; stroke-width: 1.8; }
+    .feat-title { font-family: var(--ff-display); font-size: 20px; font-weight: 400; color: var(--white); margin-bottom: 12px; }
+    .feat-desc { font-size: 13px; font-weight: 300; color: rgba(255,255,255,.5); line-height: 1.7; }
+
+    /* ══ PROCESS ══ */
+    .section-process { padding: 120px 5vw; background: var(--cream); }
+    .process-header { text-align: center; margin-bottom: 80px; }
+    .process-header .label { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--red); font-weight: 500; margin-bottom: 16px; }
+    .process-header h2 { font-family: var(--ff-display); font-size: clamp(30px,4vw,48px); font-weight: 300; color: var(--text); }
+    .process-header h2 strong { font-weight: 600; color: var(--red); }
+
+    .process-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; position: relative; }
+    .process-steps::before {
+      content: ''; position: absolute; top: 32px; left: 10%; right: 10%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--red), var(--red), transparent); opacity: .25;
+    }
+    .process-step { padding: 0 24px; text-align: center; }
+    .step-circle {
+      width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--red);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px; background: var(--cream); position: relative; z-index: 1;
+      transition: background .25s, box-shadow .25s;
+    }
+    .process-step:hover .step-circle { background: var(--red); box-shadow: 0 0 0 8px rgba(198,63,63,.12); }
+    .process-step:hover .step-circle svg { stroke: var(--white); }
+    .step-circle svg { width: 24px; height: 24px; stroke: var(--red); fill: none; stroke-width: 1.8; transition: stroke .25s; }
+    .step-num {
+      position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%;
+      background: var(--red); color: var(--white); font-size: 10px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-title { font-family: var(--ff-display); font-size: 18px; font-weight: 500; color: var(--text); margin-bottom: 10px; }
+    .step-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+    /* ══ CTA ══ */
+    .section-cta {
+      padding: 120px 5vw; text-align: center;
+      background: linear-gradient(150deg, var(--red-deep) 0%, var(--red3) 40%, var(--red) 100%);
+      position: relative; overflow: hidden;
+    }
+    .section-cta::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 55% 80% at 50% 50%, rgba(255,160,160,.1), transparent);
+    }
+    .section-cta .label { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 20px; position: relative; z-index: 1; }
+    .section-cta h2 { font-family: var(--ff-display); font-size: clamp(36px,5vw,64px); font-weight: 300; color: var(--white); line-height: 1.1; margin-bottom: 20px; position: relative; z-index: 1; }
+    .section-cta h2 em { font-style: italic; color: var(--gold2); }
+    .section-cta p { font-size: 15px; font-weight: 300; color: rgba(255,255,255,.55); max-width: 480px; margin: 0 auto 48px; line-height: 1.7; position: relative; z-index: 1; }
+    .cta-buttons { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; position: relative; z-index: 1; }
+
+    /* ══ FOOTER ══ */
+    footer {
+      background: var(--red-deep);
+      padding: 48px 5vw 32px;
+      border-top: 1px solid rgba(198,63,63,.3);
+    }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+    .footer-logo { font-family: var(--ff-display); font-size: 20px; font-weight: 300; color: rgba(255,255,255,.4); }
+    .footer-logo strong { font-weight: 600; color: var(--gold2); }
+    .footer-links { display: flex; gap: 28px; list-style: none; }
+    .footer-links a { font-size: 12px; color: rgba(255,255,255,.3); text-decoration: none; letter-spacing: .04em; transition: color .2s; }
+    .footer-links a:hover { color: var(--gold2); }
+    .footer-copy { font-size: 11px; color: rgba(255,255,255,.2); text-align: center; letter-spacing: .04em; }
+
+    /* ══ MODAL ══ */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(50,5,5,.88); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+      opacity: 0; pointer-events: none; transition: opacity .3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--cream); border-radius: 16px;
+      width: 100%; max-width: 460px; overflow: hidden;
+      transform: translateY(24px) scale(.97); transition: transform .3s;
+      box-shadow: 0 40px 80px rgba(50,5,5,.6);
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+    .modal-header {
+      background: linear-gradient(145deg, var(--red-deep) 0%, var(--red3) 100%);
+      padding: 28px 32px 24px; position: relative;
+    }
+    .modal-header-accent {
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--red2), var(--gold), var(--red2));
+    }
+    .modal-tabs {
+      display: flex; gap: 0;
+      background: rgba(255,255,255,.08); border-radius: 8px; padding: 4px; margin-bottom: 20px;
+    }
+    .tab-btn {
+      flex: 1; padding: 9px; font-family: var(--ff-body); font-size: 13px; font-weight: 500;
+      color: rgba(255,255,255,.45); background: transparent; border: none; border-radius: 6px;
+      cursor: pointer; transition: .2s; letter-spacing: .03em;
+    }
+    .tab-btn.active { background: var(--white); color: var(--red3); }
+    .modal-title { font-family: var(--ff-display); font-size: 26px; font-weight: 300; color: var(--white); }
+    .modal-title strong { font-weight: 600; }
+    .modal-sub { font-size: 13px; color: rgba(255,255,255,.45); margin-top: 4px; }
+
+    .modal-close {
+      position: absolute; top: 20px; right: 20px; width: 32px; height: 32px;
+      background: rgba(255,255,255,.1); border: none; border-radius: 6px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,.2); }
+    .modal-close svg { width: 14px; height: 14px; stroke: rgba(255,255,255,.7); fill: none; stroke-width: 2.5; }
+
+    .modal-body { padding: 28px 32px 32px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+    .form-group input, .form-group select {
+      width: 100%; padding: 12px 16px; background: var(--white);
+      border: 1.5px solid var(--smoke); border-radius: 8px;
+      font-family: var(--ff-body); font-size: 14px; color: var(--text);
+      transition: border-color .2s, box-shadow .2s; outline: none;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--red); box-shadow: 0 0 0 3px rgba(198,63,63,.12);
+    }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .btn-modal-primary {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--red) 0%, var(--red3) 100%);
+      color: var(--white); font-family: var(--ff-body); font-size: 15px; font-weight: 600;
+      border: none; border-radius: 8px; cursor: pointer; letter-spacing: .02em;
+      transition: opacity .2s, transform .15s;
+      box-shadow: 0 4px 16px rgba(198,63,63,.4);
+    }
+    .btn-modal-primary:hover { opacity: .9; transform: translateY(-1px); }
+    .btn-modal-primary:active { transform: translateY(0); }
+
+    .modal-note { font-size: 12px; text-align: center; color: var(--muted); margin-top: 16px; line-height: 1.6; }
+    .modal-note a { color: var(--red); text-decoration: none; }
+    .modal-note a:hover { color: var(--red2); }
+
+    /* ══ ANIMATIONS ══ */
+    @keyframes fadeInUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ══ RESPONSIVE ══ */
+    @media (max-width: 900px) {
+      .section-about { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .process-steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .process-steps::before { display: none; }
+      .hero-stats, .nav-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      .features-grid, .process-steps { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-mark"><img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/dbe7f497-3ab3-40ab-918d-ef6afb75abf3/df1yz9b-7948cf55-4635-4aee-9761-c056bd9984d3.png/v1/fill/w_370,h_370/icon_by_wizzzdesigns_df1yz9b-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MzcwIiwicGF0aCI6IlwvZlwvZGJlN2Y0OTctM2FiMy00MGFiLTkxOGQtZWY2YWZiNzVhYmYzXC9kZjF5ejliLTc5NDhjZjU1LTQ2MzUtNGFlZS05NzYxLWMwNTZiZDk5ODRkMy5wbmciLCJ3aWR0aCI6Ijw9MzcwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.x4M0dl8qNWTZA7iJrPcjOD4q-tpfhaOOjQKJBWl0B24" alt="Universiteti AAB logo"></div>
+    <div class="nav-logo-text">
+      <div class="t1">Universiteti AAB</div>
+      <div class="t2">Prishtinë, Kosovë</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">Rreth Sistemit</a></li>
+    <li><a href="#features">Funksionet</a></li>
+    <li><a href="#process">Si Funksionon</a></li>
+    <li><a href="#" class="nav-cta" onclick="openModal(event,'login')">Hyr në Sistem</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="none">
+      <line x1="0"    y1="900" x2="600"  y2="0"   stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="200"  y1="900" x2="900"  y2="0"   stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <line x1="1440" y1="0"   x2="900"  y2="900" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+      <circle cx="1100" cy="200" r="320" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <circle cx="1100" cy="200" r="200" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="1"/>
+    </svg>
+  </div>
+  <div class="hero-dots">
+    <script>for(let i=0;i<84;i++)document.write('<span></span>')</script>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Universiteti AAB — Prishtinë</div>
+    <h1 class="hero-title">
+      Integriteti
+      <em>Akademik</em>
+      <span class="line2">i Garantuar.</span>
+    </h1>
+    <p class="hero-sub">
+      Platforma e avancuar e analizës së plagjiaturës për temat e diplomës —
+      e ndërtuar mbi inteligjencën artificiale, e mbrojtur me enkriptim, e besuar nga akademia.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-hero-primary" onclick="openModal(event,'register')">
+        <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        Regjistrohu Tani
+      </button>
+      <button class="btn-hero-ghost" onclick="openModal(event,'login')">
+        Hyr në Llogari →
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-badge"><div class="num">98%</div><div class="lbl">Saktësi Zbulimi</div></div>
+    <div class="stat-badge"><div class="num">2.4k+</div><div class="lbl">Tema të Analizuara</div></div>
+    <div class="stat-badge"><div class="num">AES‑256</div><div class="lbl">Enkriptim</div></div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Rrjedh</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section-about" id="about">
+  <div>
+    <div class="about-label">Rreth Sistemit</div>
+    <h2 class="about-title">Mbrojtja e <strong>origjinalitetit</strong><br>akademik në çdo nivel</h2>
+    <p class="about-text">Sistemi ynë kombinon teknologjinë më të fundit të inteligjencës artificiale me bazën e të dhënave konfidenciale të Universitetit AAB — duke ofruar analizë të thellë, të sigurt dhe të besueshme.</p>
+    <p class="about-text">Dokumentet e fakultetit mbeten plotësisht konfidenciale, të enkriptuara me AES-256. Vetëm AI agjenti i përdor për krahasim — asnjë person nuk ka akses te permbajtja e tyre.</p>
+  </div>
+  <div class="about-image">
+    <div class="about-card-main">
+      <div class="about-icon-grid">
+        <div class="about-icon-item"><div class="about-icon-box"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><span>Enkriptim AES-256</span></div>
+        <div class="about-icon-item"><div class="about-icon-box"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div><span>Kërkim në Web</span></div>
+        <div class="about-icon-item"><div class="about-icon-box"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span>Analiza AI</span></div>
+        <div class="about-icon-item"><div class="about-icon-box"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><span>Raporte PDF</span></div>
+        <div class="about-icon-item"><div class="about-icon-box"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><span>Rol Admin</span></div>
+        <div class="about-icon-item"><div class="about-icon-box"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><span>Dashboard Live</span></div>
+      </div>
+    </div>
+    <div class="about-float-badge"><div class="n">7+</div><div class="l">Departamente</div></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section-features" id="features">
+  <div class="features-header">
+    <div class="label">Funksionet Kryesore</div>
+    <h2>Gjithçka që nevojitet për<br><em>integritet akademik</em></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-num">01</div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div class="feat-title">Databaza Konfidenciale</div>
+      <div class="feat-desc">Temat e kaluara enkriptohen me AES-256. Asnjë person nuk mund t'i lexojë — vetëm AI i përdor për krahasim intern.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">02</div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+      <div class="feat-title">Kërkim në Internet</div>
+      <div class="feat-desc">AI agjenti kërkon automatikisht në miliarda burime online — revista, libra dhe faqe web ndërkombëtare.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">03</div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="feat-title">Rezultate në Kohë Reale</div>
+      <div class="feat-desc">Monitorim live i progresit. Shikoni statusin, përqindjen e plagjiaturës dhe seksionet e flamëruara menjëherë.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">04</div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <div class="feat-title">Raporte Akademike</div>
+      <div class="feat-desc">Gjenerohet automatikisht raport i detajuar me gjetjet, seksionet problematike dhe rekomandimet nga AI.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">05</div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="feat-title">Akses me Role</div>
+      <div class="feat-desc">Admin menaxhon gjithçka, Profesori ngarkon për departamentin e tij — çdo rol ka aksesin e duhur.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">06</div>
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="feat-title">Siguri Totale</div>
+      <div class="feat-desc">AES-256, JWT, SHA-256 — ndërtuar mbi standardet enterprise. Asnjë rrjedhje e të dhënave konfidenciale.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section-process" id="process">
+  <div class="process-header">
+    <div class="label">Procesi</div>
+    <h2>Si funksionon <strong>analiza</strong></h2>
+  </div>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-circle"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><div class="step-num">1</div></div>
+      <div class="step-title">Ngarko Temën</div>
+      <div class="step-desc">Ngarko temën e diplomës si PDF, DOCX ose TXT. Teksti ekstraktohet automatikisht.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-circle"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div class="step-num">2</div></div>
+      <div class="step-title">Krahasim Konfidencial</div>
+      <div class="step-desc">AI krahason me databazën e enkriptuar të temave të kaluara pa ekspozuar asnjë permbajtje.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-circle"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><div class="step-num">3</div></div>
+      <div class="step-title">Kërkim Online</div>
+      <div class="step-desc">Kërkimi automatik i burimeve online — revista akademike, libra dhe Wikipedia.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-circle"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><div class="step-num">4</div></div>
+      <div class="step-title">Raporti Final</div>
+      <div class="step-desc">Raporti i plotë me përqindjet, seksionet e flamëruara dhe rekomandimet e AI gjenerohet automatikisht.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-cta">
+  <div class="label">Fillo Sot</div>
+  <h2>Integritet akademik<br>fillon me <em>një klik</em></h2>
+  <p>Bashkohu me Universitetin AAB në platformën e analizës së plagjiaturës. I sigurt, i shpejtë, i besueshëm.</p>
+  <div class="cta-buttons">
+    <button class="btn-hero-primary" onclick="openModal(event,'register')">
+      <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+      Regjistrohu Falas
+    </button>
+    <button class="btn-hero-ghost" onclick="openModal(event,'login')">Hyr në Sistem →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Universiteti <strong>AAB</strong></div>
+    <ul class="footer-links">
+      <li><a href="#">Privatësia</a></li>
+      <li><a href="#">Kushtet</a></li>
+      <li><a href="#">Kontakt</a></li>
+      <li><a href="admin.html">Admin Panel</a></li>
+    </ul>
+  </div>
+  <div class="footer-copy">© 2024 Universiteti AAB, Prishtinë. Të gjitha të drejtat e rezervuara.</div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent"></div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal-tabs">
+        <button class="tab-btn active" id="tab-login"    onclick="switchTab('login')">Hyr</button>
+        <button class="tab-btn"        id="tab-register" onclick="switchTab('register')">Regjistrohu</button>
+      </div>
+      <div class="modal-title" id="modal-title">Mirë se <strong>erdhe</strong></div>
+      <div class="modal-sub"  id="modal-sub">Hyr në llogarinë tënde</div>
+    </div>
+    <div class="modal-body">
+
+      <!-- LOGIN -->
+      <div id="form-login">
+        <div class="form-group">
+          <label>Emri i Përdoruesit ose Email</label>
+          <input type="text" id="l-username" placeholder="p.sh. arta.krasniqi ose prof.demo@aab.edu.al" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label>Fjalëkalimi</label>
+          <input type="password" id="l-password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <div id="login-msg" style="font-size:13px;margin-bottom:12px;display:none"></div>
+        <button class="btn-modal-primary" onclick="doLogin()">Hyr në Sistem</button>
+        <div class="modal-note">Nuk ke llogari? <a href="#" onclick="switchTab('register');return false">Regjistrohu këtu</a></div>
+      </div>
+
+      <!-- REGISTER -->
+      <div id="form-register" style="display:none">
+        <div class="form-row-2">
+          <div class="form-group"><label>Emri</label><input type="text" id="r-fname" placeholder="Arta"></div>
+          <div class="form-group"><label>Mbiemri</label><input type="text" id="r-lname" placeholder="Krasniqi"></div>
+        </div>
+        <div class="form-group"><label>Email Universitar</label><input type="email" id="r-email" placeholder="arta.krasniqi@aab.edu.al"></div>
+        <div class="form-group"><label>Numri Indeksit</label><input type="text" id="r-index" placeholder="2024/CS/0001"></div>
+        <div class="form-group">
+          <label>Departamenti</label>
+          <select id="r-dept">
+            <option value="">— Zgjidh departamentin —</option>
+            <option>Programim</option>
+            <option>Programim dhe AI</option>
+            <option>Programim dhe Multimedia</option>
+            <option>Programim i Lojerave Kompjuterike</option>
+            <option>Siguri Kibernetike</option>
+            <option>Specializim ne Inxhinieri Softuerike</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Fjalëkalimi</label><input type="password" id="r-pass" placeholder="Min. 8 karaktere"></div>
+        <div id="reg-msg" style="font-size:13px;margin-bottom:12px;display:none"></div>
+        <button class="btn-modal-primary" onclick="doRegister()">Krijo Llogarinë</button>
+        <div class="modal-note">Duke u regjistruar pranon <a href="#">Kushtet e Përdorimit</a>.<br>Ke llogari? <a href="#" onclick="switchTab('login');return false">Hyr këtu</a></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal(e, tab) {
+    if(e) e.preventDefault();
+    document.getElementById('modal-overlay').classList.add('open');
+    switchTab(tab||'login');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function closeModalOutside(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+  function switchTab(tab) {
+    const isLogin = tab==='login';
+    document.getElementById('tab-login').classList.toggle('active', isLogin);
+    document.getElementById('tab-register').classList.toggle('active', !isLogin);
+    document.getElementById('form-login').style.display    = isLogin ? '' : 'none';
+    document.getElementById('form-register').style.display = isLogin ? 'none' : '';
+    document.getElementById('modal-title').innerHTML = isLogin ? 'Mirë se <strong>erdhe</strong>' : 'Krijo <strong>llogarinë</strong>';
+    document.getElementById('modal-sub').textContent  = isLogin ? 'Hyr në llogarinë tënde' : 'Regjistrohu në platformën AAB';
+  }
+
+  async function doLogin() {
+    const username = document.getElementById('l-username').value.trim();
+    const password = document.getElementById('l-password').value;
+    const msg      = document.getElementById('login-msg');
+    if(!username||!password){ showMsg(msg,'Plotëso të dy fushat','#C63F3F'); return; }
+    try {
+      const backendOrigin = (() => {
+        const origin = window.location.origin;
+        if (origin && origin !== 'null' && origin.includes(':8000')) return origin;
+        return 'http://localhost:8000';
+      })();
+      const apiBase = `${backendOrigin}/api`;
+      const res  = await fetch(`${apiBase}/auth/login`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+      const data = await res.json();
+      if(!res.ok){ showMsg(msg, data.detail||'Kredenciale të gabuara','#C63F3F'); return; }
+      let tokenKey, userKey;
+      if (data.user.role === 'professor') { tokenKey = 'prof_token'; userKey = 'prof_user'; }
+      else if (data.user.role === 'admin') { tokenKey = 'admin_token'; userKey = 'admin_user'; }
+      else { tokenKey = 'student_token'; userKey = 'student_user'; }
+      localStorage.setItem(tokenKey, data.access_token);
+      localStorage.setItem(userKey, JSON.stringify(data.user));
+
+      // Domain-based redirect rules (user requested):
+      const identifier = username; // value entered by user (username or email)
+      const email = (data.user && data.user.email) ? data.user.email.toLowerCase() : identifier.toLowerCase();
+      if (data.user.role === 'admin' || data.user.username === 'admin') {
+        window.location.href = 'admin.html';
+        return;
+      }
+      if (email.endsWith('@universitetiaab.com')) {
+        window.location.href = 'student.html';
+        return;
+      }
+      if (email.endsWith('@aab.edu') || email.endsWith('@aab.edu.al')) {
+        window.location.href = 'profesor.html';
+        return;
+      }
+      // Fallback to role-based routing
+      window.location.href = data.user.role === 'professor' ? 'profesor.html' : 'index.html';
+    } catch { showMsg(msg,'Nuk u lidh me serverin.','#C63F3F'); }
+  }
+
+  async function doRegister() {
+    const fname = document.getElementById('r-fname').value.trim();
+    const lname = document.getElementById('r-lname').value.trim();
+    const email = document.getElementById('r-email').value.trim();
+    const dept  = document.getElementById('r-dept').value;
+    const pass  = document.getElementById('r-pass').value;
+    const msg   = document.getElementById('reg-msg');
+    if(!fname||!lname||!email||!pass){ showMsg(msg,'Plotëso fushat e detyrueshme','#C63F3F'); return; }
+    if(pass.length<8){ showMsg(msg,'Min. 8 karaktere fjalëkalimi','#C63F3F'); return; }
+    try {
+      const backendOrigin = (() => {
+        const origin = window.location.origin;
+        if (origin && origin !== 'null' && origin.includes(':8000')) return origin;
+        return 'http://localhost:8000';
+      })();
+      const apiBase = `${backendOrigin}/api`;
+      const res  = await fetch(`${apiBase}/auth/register`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:email.split('@')[0],email,full_name:fname+' '+lname,password:pass,department:dept||null})});
+      const data = await res.json();
+      if(!res.ok){ showMsg(msg, data.detail||'Gabim gjatë regjistrimit','#C63F3F'); return; }
+      switchTab('login');
+      const lm=document.getElementById('login-msg');
+      lm.style.display='block'; lm.style.color='#2D7A3A';
+      lm.textContent='✓ Llogaria u krijua! Hyr tani.';
+    } catch { showMsg(msg,'Nuk u lidh me serverin.','#C63F3F'); }
+  }
+
+  function showMsg(el, text, color) { el.textContent=text; el.style.display='block'; el.style.color=color; }
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href'); if(id==='#') return;
+      e.preventDefault(); document.querySelector(id)?.scrollIntoView({behavior:'smooth'});
+    });
+  });
+</script>
+</body>
+</html>
