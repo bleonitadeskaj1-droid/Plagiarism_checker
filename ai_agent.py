@@ -1,145 +1,184 @@
-import anthropic, json, re, os
-from dotenv import load_dotenv
+import json
+import re
+from typing import Dict, Iterable, List, Optional
 
-load_dotenv()
+import nltk
+import numpy as np
+from nltk.stem import SnowballStemmer
+from nltk.tokenize import RegexpTokenizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 class PlagiarismAgent:
     def __init__(self):
-        api_key = os.getenv("ANTHROPIC_API_KEY")
-        self.client = anthropic.Anthropic(api_key=api_key) if api_key else None
-        self.model = "claude-sonnet-4-20250514"
+        self.tokenizer = RegexpTokenizer(r"[A-Za-zÀ-ÖØ-öø-ÿ0-9]{3,}")
+        self.stemmer = SnowballStemmer("english")
 
     def analyze_with_confidential(self, thesis_text, thesis_title, public_theses, conf_docs, search_web=True):
-        text_sample = thesis_text[:7000]
-        if not self.client:
-            return self._mock_analysis(thesis_text, public_theses, search_web)
+        public_matches = self._compare_documents(
+            source_text=thesis_text,
+            documents=public_theses,
+            source_type="internal",
+        )
+        confidential_matches = self._compare_documents(
+            source_text=thesis_text,
+            documents=conf_docs,
+            source_type="confidential",
+        )
 
-        public_ctx = ""
-        if public_theses:
-            public_ctx = "\n\nTEMAT PUBLIKE NE DATABAZE:\n"
-            for t in public_theses[:8]:
-                public_ctx += f"\n[PUB-{t['id']}] {t['title']}\n{t.get('content','')[:400]}\n---"
-        conf_ctx = ""
-        if conf_docs:
-            conf_ctx = "\n\nDOKUMENTET KONFIDENCIALE TE FAKULTETIT:\n"
-            for d in conf_docs[:15]:
-                conf_ctx += f"\n[CONF-{d['id']}] {d['title']} ({d.get('year','')}) - {d.get('department','')}\n{d.get('content','')[:500]}\n---"
+        flagged_sections = sorted(
+            public_matches + confidential_matches,
+            key=lambda item: item.get("similarity", 0),
+            reverse=True,
+        )
 
-        system_prompt = """Jeni ekspert i analizes se plagjiatures akademike.
-Keni akses ne: (1) Tema publike [PUB-ID] dhe (2) Dokumente konfidenciale [CONF-ID].
+        internal_score = self._max_similarity(public_matches)
+        confidential_score = self._max_similarity(confidential_matches)
+        web_score = 0.0
+        overall_score = max(internal_score, confidential_score, web_score)
 
-RREGULL KRITIK per CONF: Tregoni vetem source_type="confidential", conf_source_id=<id>, source_title=<titulli>.
-KURRE mos citoni tekst nga dokumentet CONF. Tregoni vetem tekstin NGA TEMA (original_text).
-
-Ktheni VETEM JSON:
-{
-  "overall_score": <0-100>,
-  "internal_score": <0-100>,
-  "confidential_score": <0-100>,
-  "web_score": <0-100>,
-  "risk_level": "low|medium|high|critical",
-  "summary": "<permbledhje>",
-  "flagged_sections": [
-    {
-      "source_type": "confidential|internal|web",
-      "conf_source_id": <id ose null>,
-      "source_title": "<titulli i burimit>",
-      "source_url": "<url ose null>",
-      "original_text": "<teksti NGA TEMA - max 200 karaktere>",
-      "similarity": <0-100>,
-      "paragraph_index": <0>
-    }
-  ],
-  "recommendations": "<rekomandimet>"
-}"""
-
-        user_msg = f"Analizoni:\nTITULLI: {thesis_title}\nTEKSTI:\n{text_sample}{public_ctx}{conf_ctx}"
-        tools = [{"type": "web_search_20250305", "name": "web_search"}] if search_web else []
-
-        try:
-            kwargs = dict(model=self.model, max_tokens=4000, system=system_prompt,
-                          messages=[{"role": "user", "content": user_msg}])
-            if tools:
-                kwargs["tools"] = tools
-            response = self.client.messages.create(**kwargs)
-            text = "".join(b.text for b in response.content if b.type == "text")
-            return self._parse_json(text)
-        except Exception as e:
-            return self._error_result(str(e))
+        return {
+            "overall_score": round(overall_score, 2),
+            "internal_score": round(internal_score, 2),
+            "confidential_score": round(confidential_score, 2),
+            "web_score": round(web_score, 2),
+            "risk_level": self._risk_level(overall_score),
+            "summary": self._summary(thesis_title, overall_score, len(flagged_sections), search_web),
+            "flagged_sections": flagged_sections,
+            "recommendations": self._recommendations(overall_score, flagged_sections),
+        }
 
     def analyze_plagiarism(self, thesis_text, thesis_title, existing_theses, search_web=True):
-        return self.analyze_with_confidential(thesis_text=thesis_text, thesis_title=thesis_title,
-            public_theses=existing_theses, conf_docs=[], search_web=search_web)
+        return self.analyze_with_confidential(
+            thesis_text=thesis_text,
+            thesis_title=thesis_title,
+            public_theses=existing_theses,
+            conf_docs=[],
+            search_web=search_web,
+        )
 
     def generate_report_summary(self, result, thesis_title):
-        prompt = f"""Shkruaj raport akademik ne shqip:
-Titulli: {thesis_title}
-Score: {result.get('overall_score',0)}% | Konfidencial: {result.get('confidential_score',0)}% | Web: {result.get('web_score',0)}%
-Rreziku: {result.get('risk_level','unknown')} | Seksione: {len(result.get('flagged_sections',[]))}
-SHENIM: Mos cito permbajtje nga dokumentet konfidenciale."""
+        return (
+            f"Raport i shkurtër për {thesis_title}: "
+            f"{result.get('overall_score', 0)}% ngjashmëri totale, "
+            f"{result.get('internal_score', 0)}% nga baza interne dhe "
+            f"{result.get('confidential_score', 0)}% nga dokumentet konfidenciale."
+        )
+
+    def _compare_documents(self, source_text: str, documents: Optional[Iterable[Dict]], source_type: str) -> List[Dict]:
+        documents = [doc for doc in (documents or []) if (doc.get("content") or "").strip()]
+        if not (source_text or "").strip() or not documents:
+            return []
+
+        corpus = [source_text] + [doc.get("content", "") for doc in documents]
+        processed_corpus = [self._preprocess_text(text) for text in corpus]
+
+        if not processed_corpus[0] or not any(processed_corpus[1:]):
+            return []
+
         try:
-            if not self.client:
-                return (
-                    f"Raport i shkurtër për {thesis_title}: "
-                    f"{result.get('overall_score', 0)}% ngjashmëri totale, "
-                    f"{result.get('internal_score', 0)}% nga baza interne dhe "
-                    f"{result.get('web_score', 0)}% nga web-i."
-                )
-            r = self.client.messages.create(model=self.model, max_tokens=1500,
-                messages=[{"role":"user","content":prompt}])
-            return r.content[0].text
-        except Exception as e:
-            return f"Gabim: {e}"
+            vectorizer = TfidfVectorizer(
+                lowercase=False,
+                token_pattern=None,
+                tokenizer=str.split,
+                norm="l2",
+                sublinear_tf=True,
+            )
+            tfidf_matrix = vectorizer.fit_transform(processed_corpus)
+            similarities = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:]).flatten()
+        except ValueError:
+            return []
+
+        matches = []
+        for doc, similarity in zip(documents, similarities):
+            percentage = float(np.clip(similarity * 100.0, 0.0, 100.0))
+
+            title = doc.get("title") or f"Document {doc.get('id', '')}".strip()
+            match = {
+                "text": self._extract_representative_excerpt(source_text),
+                "source": title,
+                "source_type": source_type,
+                "source_title": title,
+                "source_url": doc.get("source_url") or doc.get("url"),
+                "original_text": self._extract_representative_excerpt(source_text),
+                "similarity": round(percentage, 2),
+                "paragraph_index": 0,
+                "reason": "TF-IDF cosine similarity",
+            }
+
+            if source_type == "confidential":
+                match["conf_source_id"] = doc.get("id")
+
+            matches.append(match)
+
+        return sorted(matches, key=lambda item: item["similarity"], reverse=True)
+
+    def _preprocess_text(self, text: str) -> str:
+        text = (text or "").lower()
+        tokens = self.tokenizer.tokenize(text)
+        normalized = []
+
+        for token in tokens:
+            if token.isdigit():
+                continue
+            normalized.append(self.stemmer.stem(token))
+
+        return " ".join(normalized)
+
+    def _extract_representative_excerpt(self, text: str, max_length: int = 200) -> str:
+        clean_text = re.sub(r"\s+", " ", (text or "")).strip()
+        if len(clean_text) <= max_length:
+            return clean_text
+        return clean_text[:max_length].rsplit(" ", 1)[0]
+
+    def _max_similarity(self, matches: List[Dict]) -> float:
+        if not matches:
+            return 0.0
+        return float(np.max([match.get("similarity", 0.0) for match in matches]))
+
+    def _risk_level(self, score: float) -> str:
+        if score >= 70:
+            return "critical"
+        if score >= 50:
+            return "high"
+        if score >= 25:
+            return "medium"
+        return "low"
+
+    def _summary(self, thesis_title: str, score: float, match_count: int, search_web: bool) -> str:
+        web_note = "Krahasimi web nuk u ekzekutua nga ky agent lokal." if search_web else "Krahasimi web ishte i çaktivizuar."
+        return (
+            f"Analiza për '{thesis_title}' gjeti {round(score, 2)}% ngjashmëri maksimale "
+            f"në {match_count} dokument(e) të krahasuara. {web_note}"
+        )
+
+    def _recommendations(self, score: float, matches: List[Dict]) -> str:
+        if not matches:
+            return "Nuk u gjetën ngjashmëri të rëndësishme me dokumentet në bazë."
+        if score >= 50:
+            return "Rishikoni me kujdes burimet me ngjashmërinë më të lartë dhe verifikoni citimet."
+        if score >= 25:
+            return "Kontrolloni seksionet e ngjashme dhe sigurohuni që referencat janë të plota."
+        return "Ngjashmëria është e ulët; rekomandohet vetëm kontroll normal akademik."
 
     def _parse_json(self, text):
         try:
-            text = re.sub(r'```json\s*','', text)
-            text = re.sub(r'```\s*','', text).strip()
-            m = re.search(r'\{.*\}', text, re.DOTALL)
-            return json.loads(m.group() if m else text)
-        except:
+            text = re.sub(r"```json\s*", "", text)
+            text = re.sub(r"```\s*", "", text).strip()
+            match = re.search(r"\{.*\}", text, re.DOTALL)
+            return json.loads(match.group() if match else text)
+        except Exception:
             return self._error_result("JSON parse failed")
 
     def _error_result(self, msg):
-        return {"overall_score":0,"internal_score":0,"confidential_score":0,
-                "web_score":0,"risk_level":"unknown","summary":f"Gabim: {msg}",
-                "flagged_sections":[],"recommendations":"Provoni perseri."}
-
-    def _mock_analysis(self, thesis_text, public_theses, search_web=True):
-        def tokenize(text):
-            return set(re.findall(r"\w{3,}", (text or "").lower()))
-
-        thesis_words = tokenize(thesis_text)
-        best_score = 0.0
-        flagged = []
-
-        for thesis in (public_theses or [])[:10]:
-            other_words = tokenize(thesis.get("content", ""))
-            if not thesis_words or not other_words:
-                continue
-            common = thesis_words & other_words
-            denom = min(len(thesis_words), len(other_words)) or 1
-            score = (len(common) / denom) * 100.0
-            if score > 0:
-                flagged.append({
-                    "text": "...",
-                    "source": thesis.get("title") or f"Thesis {thesis.get('id')}",
-                    "source_type": "internal",
-                    "similarity": round(score, 2),
-                    "reason": "Mock match",
-                })
-            best_score = max(best_score, score)
-
-        web_score = 5.0 if search_web else 0.0
-        overall = max(best_score, web_score)
         return {
-            "overall_score": round(overall, 2),
-            "internal_score": round(best_score, 2),
+            "overall_score": 0,
+            "internal_score": 0,
             "confidential_score": 0,
-            "web_score": round(web_score, 2),
-            "risk_level": "high" if overall >= 50 else "medium" if overall >= 25 else "low",
-            "summary": "Kjo është një analizë mock për testim.",
-            "flagged_sections": flagged,
-            "recommendations": "Kontrollo burimet e listuara.",
+            "web_score": 0,
+            "risk_level": "unknown",
+            "summary": f"Gabim: {msg}",
+            "flagged_sections": [],
+            "recommendations": "Provoni përsëri.",
         }
