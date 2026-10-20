@@ -4,7 +4,7 @@
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from fastapi.responses import FileResponse
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from pydantic import BaseModel
 from typing import Optional
 import os
@@ -21,7 +21,17 @@ from access_control import (
     ensure_professor_profile,
     ensure_student_profile,
 )
-from models import Professor, Review, SubmissionWorkflowStatus, Thesis, ThesisStatus, UploadedFile, User, UserRole
+from models import (
+    PlagiarismResult,
+    Professor,
+    Review,
+    SubmissionWorkflowStatus,
+    Thesis,
+    ThesisStatus,
+    UploadedFile,
+    User,
+    UserRole,
+)
 
 router = APIRouter()
 
@@ -65,17 +75,43 @@ def list_theses(
         query = query.filter(Thesis.status == status)
 
     total = query.count()
-    theses = query.offset(skip).limit(limit).all()
+    theses = (
+        query.order_by(Thesis.created_at.desc(), Thesis.id.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
-    return {
-        "total": total,
-        "items": [
+    items = []
+    for t in theses:
+        can_view = (
+            current_user.role != UserRole.student
+            or can_view_final_review(t, current_user, db)
+        )
+        overall_score = None
+        result_id = None
+        if can_view:
+            latest = (
+                db.query(PlagiarismResult)
+                .filter(
+                    PlagiarismResult.thesis_id == t.id,
+                    PlagiarismResult.status == "completed",
+                )
+                .order_by(PlagiarismResult.analyzed_at.desc())
+                .first()
+            )
+            if latest:
+                result_id = latest.id
+                overall_score = float(latest.overall_score or 0)
+        items.append(
             {
                 "id": t.id,
                 "title": t.title,
                 "student_name": t.student.full_name if t.student else (t.submitted_by_user.full_name if t.submitted_by_user else None),
                 "file_name": (t.uploaded_files[0].file_name if t.uploaded_files else None) or (os.path.basename(t.file_path) if t.file_path else None),
                 "file_path": t.file_path,
+                "has_file": bool(t.file_path or (t.uploaded_files and t.uploaded_files[0].file_path)),
+                "file_type": t.file_type,
                 "submission_date": t.created_at.isoformat() if t.created_at else None,
                 "department": t.department,
                 "year": t.year,
@@ -84,13 +120,16 @@ def list_theses(
                 "assigned_professor": t.assigned_professor.full_name if t.assigned_professor else None,
                 "status": t.workflow_status.value if getattr(t.workflow_status, "value", None) else t.workflow_status,
                 "workflow_status": t.workflow_status.value if getattr(t.workflow_status, "value", None) else t.workflow_status,
-                "analysis_status": None if current_user.role == UserRole.student and not can_view_final_review(t, current_user, db) else (t.status.value if getattr(t.status, "value", None) else t.status),
+                "analysis_status": None if not can_view else (t.status.value if getattr(t.status, "value", None) else t.status),
                 "review": _serialize_review(t, current_user, db),
-                "created_at": t.created_at.isoformat() if t.created_at else None
+                "overall_score": overall_score,
+                "result_id": result_id,
+                "can_view_result": can_view and result_id is not None,
+                "created_at": t.created_at.isoformat() if t.created_at else None,
             }
-            for t in theses
-        ]
-    }
+        )
+
+    return {"total": total, "items": items}
 
 
 @router.post("/upload")
@@ -107,6 +146,12 @@ async def upload_thesis(
 ):
     """Upload një temë diplome (PDF ose DOCX)."""
 
+    # When called from another route, Form(...) defaults stay as Form objects.
+    if not isinstance(supervisor, (str, type(None))):
+        supervisor = None
+    if not isinstance(department, (str, type(None))):
+        department = None
+
     # Kontrollo llojin e skedarit
     allowed_types = ["application/pdf",
                      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -116,13 +161,28 @@ async def upload_thesis(
     if file_ext not in ["pdf", "docx", "txt"]:
         raise HTTPException(status_code=400, detail="Vetëm PDF, DOCX dhe TXT pranohen")
 
-    # Ruaj skedarin
-    file_path = os.path.join(UPLOAD_DIR, f"{title[:50].replace(' ', '_')}_{file.filename}")
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    # Ruaj skedarin (local ose S3 sipas STORAGE_BACKEND)
+    from services.storage import get_storage
+
+    storage_key = f"theses/{title[:50].replace(' ', '_')}_{file.filename}"
+    content_types = {
+        "pdf": "application/pdf",
+        "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "txt": "text/plain",
+    }
+    try:
+        file.file.seek(0)
+    except Exception:
+        pass
+    file_path = get_storage().save(
+        storage_key,
+        file.file,
+        content_type=content_types.get(file_ext),
+    )
+    local_path = str(get_storage().open_local_path(file_path))
 
     # Ekstrakto tekstin
-    content = (extract_text(file_path, file_ext) or "").strip()
+    content = (extract_text(local_path, file_ext) or "").strip()
     if not content:
         raise HTTPException(
             status_code=400,
@@ -331,19 +391,32 @@ def delete_thesis(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Fshij një temë."""
-    thesis = db.query(Thesis).filter(Thesis.id == thesis_id).first()
+    """Fshi temën plotësisht nga databaza (rezultate, matches, reviews, skedarë)."""
+    if current_user.role not in (UserRole.professor, UserRole.admin):
+        raise HTTPException(status_code=403, detail="Vetëm profesori ose admini mund të fshijë temën")
+
+    thesis = (
+        db.query(Thesis)
+        .options(joinedload(Thesis.uploaded_files), joinedload(Thesis.results))
+        .filter(Thesis.id == thesis_id)
+        .first()
+    )
     if not thesis:
         raise HTTPException(status_code=404, detail="Tema nuk u gjet")
     assert_thesis_access(db, thesis, current_user)
 
-    if thesis.file_path and os.path.exists(thesis.file_path):
-        os.remove(thesis.file_path)
+    if getattr(thesis, "is_archive", False) and current_user.role != UserRole.admin:
+        raise HTTPException(status_code=403, detail="Temat e arkivës nuk mund të fshihen nga profesori")
 
-    db.delete(thesis)
-    db.commit()
+    try:
+        from services.thesis_delete import delete_thesis_completely
 
-    return {"message": "Tema u fshi"}
+        delete_thesis_completely(db, thesis)
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Fshirja dështoi: {exc}") from exc
+
+    return {"message": "Tema u fshi plotësisht nga sistemi", "id": thesis_id}
 
 
 def extract_text(file_path: str, file_ext: str) -> str:

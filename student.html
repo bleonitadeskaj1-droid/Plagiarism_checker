@@ -3,301 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#C63F3F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="AAB Student">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/static/icons/icon-192.svg" type="image/svg+xml">
   <title>Portali i Studentit — AAB</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --red:      #C63F3F;
-      --red2:     #E05555;
-      --red3:     #A52D2D;
-      --red-deep: #6B1414;
-      --red-light:#FDF0F0;
-      --red-mid:  #F5C5C5;
-      --gold:     #C9A84C;
-      --gold2:    #E8C97A;
-      --cream:    #FDF8F3;
-      --smoke:    #EDE5DC;
-      --white:    #FFFFFF;
-      --text:     #1A0A0A;
-      --muted:    #8A6A6A;
-      --border:   #E8D8D8;
-      --success:  #166534;
-      --success-bg:#DCFCE7;
-      --warning:  #92400E;
-      --warning-bg:#FEF3C7;
-      --ff-display:'Cormorant Garamond',Georgia,serif;
-      --ff-body:   'DM Sans',sans-serif;
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:var(--ff-body);background:var(--cream);color:var(--text);min-height:100vh}
-
-    /* ══ AUTH PAGES ══ */
-    .auth-shell{
-      min-height:100vh;display:flex;
-      background:linear-gradient(150deg,var(--red-deep) 0%,var(--red3) 40%,var(--red) 100%);
-    }
-    .auth-left{
-      flex:1;display:flex;flex-direction:column;
-      align-items:center;justify-content:center;
-      padding:60px;position:relative;overflow:hidden;
-    }
-    .auth-left::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse 60% 60% at 40% 50%,rgba(255,255,255,.06),transparent);
-    }
-    .auth-deco{position:absolute;inset:0;pointer-events:none}
-    .auth-deco svg{width:100%;height:100%;position:absolute}
-    .auth-brand{position:relative;z-index:1;text-align:center}
-    .auth-mark{
-      width:80px;height:80px;background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.25);border-radius:18px;
-      display:flex;align-items:center;justify-content:center;
-      font-family:var(--ff-display);font-size:42px;font-weight:600;
-      color:var(--white);margin:0 auto 28px;
-      box-shadow:0 8px 32px rgba(0,0,0,.25);
-    }
-    .auth-brand h1{font-family:var(--ff-display);font-size:44px;font-weight:300;color:var(--white);line-height:1.08;margin-bottom:14px}
-    .auth-brand h1 strong{font-weight:600;display:block}
-    .auth-brand p{font-size:14px;color:rgba(255,255,255,.5);line-height:1.7;max-width:300px;margin:0 auto}
-    .auth-feats{display:flex;flex-direction:column;gap:14px;margin-top:44px;width:100%;max-width:300px}
-    .auth-feat{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 16px}
-    .auth-feat svg{width:18px;height:18px;stroke:var(--gold2);fill:none;stroke-width:2;flex-shrink:0}
-    .auth-feat span{font-size:13px;color:rgba(255,255,255,.7)}
-
-    .auth-right{
-      width:500px;background:var(--white);
-      display:flex;align-items:center;justify-content:center;
-      padding:60px 52px;overflow-y:auto;
-    }
-    .auth-form{width:100%}
-    .auth-eyebrow{font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:8px}
-    .auth-eyebrow::before{content:'';width:16px;height:2px;background:var(--red);border-radius:2px}
-    .auth-form h2{font-family:var(--ff-display);font-size:36px;font-weight:300;color:var(--text);margin-bottom:4px}
-    .auth-form h2 strong{font-weight:600}
-    .auth-form .sub{font-size:13px;color:var(--muted);margin-bottom:32px;line-height:1.5}
-
-    .auth-tabs{display:flex;gap:0;background:var(--smoke);border-radius:8px;padding:4px;margin-bottom:28px}
-    .atab{flex:1;padding:9px;font-family:var(--ff-body);font-size:13px;font-weight:500;color:var(--muted);background:transparent;border:none;border-radius:6px;cursor:pointer;transition:.2s}
-    .atab.active{background:var(--red);color:var(--white)}
-
-    .fg{margin-bottom:16px}
-    .fg label{display:block;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-    .fg input,.fg select{
-      width:100%;padding:12px 14px;
-      border:1.5px solid var(--border);border-radius:8px;
-      font-family:var(--ff-body);font-size:14px;color:var(--text);
-      background:#FAFAFA;outline:none;transition:.2s;
-    }
-    .fg input:focus,.fg select:focus{border-color:var(--red);background:var(--white);box-shadow:0 0 0 3px rgba(198,63,63,.1)}
-    .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-
-    .btn-auth{
-      width:100%;padding:14px;
-      background:linear-gradient(135deg,var(--red),var(--red3));
-      color:var(--white);font-family:var(--ff-body);font-size:15px;font-weight:600;
-      border:none;border-radius:8px;cursor:pointer;
-      box-shadow:0 4px 16px rgba(198,63,63,.35);
-      transition:opacity .2s,transform .15s;margin-top:8px;
-    }
-    .btn-auth:hover{opacity:.9;transform:translateY(-1px)}
-    .btn-auth:disabled{opacity:.6;cursor:not-allowed;transform:none}
-    .auth-note{font-size:12px;text-align:center;color:var(--muted);margin-top:16px;line-height:1.6}
-    .auth-note a{color:var(--red);text-decoration:none;font-weight:500}
-    #auth-msg{font-size:13px;margin:10px 0;display:none;text-align:center;padding:10px;border-radius:6px}
-    #auth-msg.err{background:var(--red-light);color:var(--red);border:1px solid var(--red-mid)}
-    #auth-msg.ok{background:var(--success-bg);color:var(--success);border:1px solid #A7F3D0}
-
-    /* ══ APP SHELL ══ */
-    #app{display:none}
-
-    .topbar{
-      position:fixed;top:0;left:0;right:0;z-index:80;
-      height:60px;background:var(--red-deep);
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0 24px;
-      border-bottom:1px solid rgba(255,255,255,.1);
-      box-shadow:0 2px 20px rgba(90,10,10,.4);
-    }
-    .tb-left{display:flex;align-items:center;gap:14px}
-    .tb-mark{width:34px;height:34px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-display);font-size:18px;font-weight:600;color:var(--white)}
-    .tb-title{font-family:var(--ff-display);font-size:18px;font-weight:400;color:var(--white)}
-    .tb-title small{font-size:11px;display:block;color:rgba(255,255,255,.4);font-family:var(--ff-body);font-weight:300;letter-spacing:.06em}
-    .tb-right{display:flex;align-items:center;gap:12px}
-    .tb-pill{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:var(--gold2);font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;letter-spacing:.05em}
-    .tb-user{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.8);font-size:13px}
-    .tb-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--red2),var(--red3));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--white);border:2px solid rgba(255,255,255,.2)}
-    .btn-out{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-family:var(--ff-body);font-size:12px;padding:6px 14px;border-radius:6px;cursor:pointer;transition:.2s}
-    .btn-out:hover{background:rgba(255,255,255,.15);color:var(--white)}
-
-    /* ══ SIDEBAR ══ */
-    .sidebar{
-      position:fixed;top:60px;left:0;bottom:0;width:220px;
-      background:var(--white);border-right:1px solid var(--border);
-      overflow-y:auto;padding:16px 0;
-    }
-    .nav-sect{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:14px 20px 5px}
-    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;color:var(--muted);cursor:pointer;border-left:3px solid transparent;transition:.15s}
-    .nav-item svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
-    .nav-item:hover{background:var(--red-light);color:var(--red)}
-    .nav-item.active{background:var(--red-light);color:var(--red);border-left-color:var(--red);font-weight:500}
-
-    /* ══ MAIN ══ */
-    .main{margin-left:220px;margin-top:60px;padding:2rem;min-height:calc(100vh - 60px)}
-    .page{display:none}.page.active{display:block}
-    .ph{margin-bottom:1.75rem}
-    .ph h1{font-family:var(--ff-display);font-size:32px;font-weight:300;color:var(--text)}
-    .ph h1 strong{font-weight:600;color:var(--red)}
-    .ph p{font-size:13px;color:var(--muted);margin-top:4px}
-
-    /* ══ CARDS ══ */
-    .card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.25rem}
-    .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}
-    .card-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
-
-    /* ══ STATS ══ */
-    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
-    .stat-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.3rem;position:relative;overflow:hidden}
-    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--red2))}
-    .stat-card .val{font-family:var(--ff-display);font-size:30px;font-weight:600;color:var(--red);line-height:1}
-    .stat-card .lbl{font-size:12px;color:var(--muted);margin-top:5px}
-    .stat-card .ico{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:8px;background:var(--red-light);display:flex;align-items:center;justify-content:center}
-    .stat-card .ico svg{width:18px;height:18px;stroke:var(--red);fill:none;stroke-width:2}
-
-    /* ══ UPLOAD ZONE ══ */
-    .upload-zone{
-      border:2px dashed var(--red-mid);border-radius:10px;
-      padding:2.5rem;text-align:center;background:var(--red-light);
-      cursor:pointer;transition:.2s;margin-bottom:1.25rem;
-    }
-    .upload-zone:hover,.upload-zone.drag{border-color:var(--red);background:#fde8e8}
-    .upload-zone svg{width:40px;height:40px;stroke:var(--red);fill:none;stroke-width:1.5;display:block;margin:0 auto 12px}
-    .upload-zone p{font-size:15px;color:var(--red3);font-weight:500}
-    .upload-zone span{font-size:12px;color:var(--muted)}
-    .upload-zone .fname{font-size:13px;color:var(--red3);font-weight:600;margin-top:10px;padding:6px 14px;background:rgba(198,63,63,.1);border-radius:6px;display:inline-block}
-
-    /* ══ FORM ══ */
-    .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-    .fgroup{display:flex;flex-direction:column;gap:5px}
-    .fgroup label{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-    .fgroup input,.fgroup select,.fgroup textarea{
-      padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;
-      font-family:var(--ff-body);font-size:14px;color:var(--text);
-      background:#FAFAFA;outline:none;transition:.2s;width:100%;
-    }
-    .fgroup input:focus,.fgroup select:focus,.fgroup textarea:focus{border-color:var(--red);background:var(--white);box-shadow:0 0 0 3px rgba(198,63,63,.1)}
-    .check-row{display:flex;gap:20px;margin-bottom:1rem;flex-wrap:wrap}
-    .check-row label{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text);cursor:pointer}
-    .check-row input[type=checkbox]{width:15px;height:15px;accent-color:var(--red)}
-
-    /* ══ BUTTONS ══ */
-    .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border:none;border-radius:8px;font-family:var(--ff-body);font-size:14px;font-weight:500;cursor:pointer;transition:.15s}
-    .btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
-    .btn-primary{background:linear-gradient(135deg,var(--red),var(--red3));color:var(--white);box-shadow:0 3px 12px rgba(198,63,63,.3)}
-    .btn-primary:hover{opacity:.9;transform:translateY(-1px)}
-    .btn-primary:disabled{opacity:.55;cursor:not-allowed;transform:none}
-    .btn-ghost{background:transparent;color:var(--red);border:1px solid var(--red-mid)}
-    .btn-ghost:hover{background:var(--red-light)}
-    .btn-secondary{background:var(--cream);color:var(--text);border:1px solid var(--border)}
-    .btn-full{width:100%;justify-content:center}
-
-    /* ══ PROGRESS ══ */
-    .prog-wrap{margin-top:1rem;display:none}
-    .prog-lbl{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .prog-bg{background:var(--red-mid);border-radius:99px;height:6px;overflow:hidden}
-    .prog-bar{background:linear-gradient(90deg,var(--red),var(--red2));height:100%;border-radius:99px;transition:width .4s}
-
-    /* ══ RESULT ══ */
-    .result-hero{
-      background:linear-gradient(145deg,var(--red-deep),var(--red3));
-      border-radius:12px;padding:2rem;text-align:center;margin-bottom:1rem;
-      color:var(--white);
-    }
-    .score-big{font-family:var(--ff-display);font-size:72px;font-weight:600;line-height:1;color:var(--white)}
-    .score-big.warn{color:var(--gold2)}
-    .score-big.ok{color:#86EFAC}
-    .score-sub{font-size:13px;color:rgba(255,255,255,.5);margin-top:6px}
-    .risk-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 18px;border-radius:20px;font-size:13px;font-weight:600;margin-top:16px}
-    .risk-critical{background:rgba(255,255,255,.15);color:#FCA5A5}
-    .risk-high{background:rgba(255,255,255,.12);color:var(--gold2)}
-    .risk-low{background:rgba(255,255,255,.12);color:#86EFAC}
-
-    .score-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
-    .sc-item{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
-    .sc-item .sv{font-family:var(--ff-display);font-size:24px;font-weight:600;color:var(--red)}
-    .sc-item .sl{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.06em}
-
-    .ai-box{background:var(--red-light);border-left:3px solid var(--red);border-radius:8px;padding:14px 16px;font-size:13px;line-height:1.7;color:var(--text);margin-bottom:1rem}
-    .ai-box strong{color:var(--red3);display:block;margin-bottom:6px;font-size:11px;text-transform:uppercase;letter-spacing:.07em}
-
-    .match-item{border:1px solid var(--red-mid);border-radius:8px;padding:12px 14px;background:var(--red-light);margin-bottom:8px}
-    .match-src{font-size:12px;font-weight:600;color:var(--red3);margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
-    .match-txt{font-size:13px;color:var(--text);line-height:1.6}
-    .conf-tag{display:inline-flex;align-items:center;gap:4px;background:#FEF3C7;color:#78350F;border-radius:20px;font-size:10px;font-weight:500;padding:2px 9px}
-    .conf-tag svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2.5}
-
-    /* ══ STATUS TIMELINE ══ */
-    .timeline{display:flex;flex-direction:column;gap:0}
-    .tl-item{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border);position:relative}
-    .tl-item:last-child{border-bottom:none}
-    .tl-dot{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--white)}
-    .tl-dot.done{background:var(--red);border-color:var(--red)}
-    .tl-dot.done svg{stroke:var(--white)}
-    .tl-dot.active{background:var(--red-light);border-color:var(--red);animation:pulse-ring 2s infinite}
-    .tl-dot.active svg{stroke:var(--red)}
-    .tl-dot svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2.5}
-    @keyframes pulse-ring{0%,100%{box-shadow:0 0 0 0 rgba(198,63,63,.3)}50%{box-shadow:0 0 0 6px rgba(198,63,63,.0)}}
-    .tl-content .tl-title{font-size:14px;font-weight:500;color:var(--text)}
-    .tl-content .tl-desc{font-size:12px;color:var(--muted);margin-top:3px}
-    .tl-content .tl-time{font-size:11px;color:var(--muted);margin-top:4px}
-
-    /* ══ TABLE ══ */
-    .tbl-wrap{overflow-x:auto}
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th{text-align:left;padding:9px 14px;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;border-bottom:2px solid var(--border);white-space:nowrap}
-    td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
-    tr:last-child td{border-bottom:none}
-    tr:hover td{background:var(--red-light)}
-    .badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap}
-    .b-red{background:var(--red-light);color:var(--red3);border:1px solid var(--red-mid)}
-    .b-green{background:var(--success-bg);color:var(--success)}
-    .b-yellow{background:var(--warning-bg);color:var(--warning)}
-    .b-gray{background:var(--smoke);color:var(--muted)}
-
-    /* ══ PROFILE ══ */
-    .profile-hero{
-      background:linear-gradient(145deg,var(--red-deep),var(--red3));
-      border-radius:12px;padding:2rem;display:flex;align-items:center;gap:24px;
-      margin-bottom:1.25rem;color:var(--white);
-    }
-    .profile-av-big{
-      width:80px;height:80px;border-radius:50%;
-      background:rgba(255,255,255,.15);border:3px solid rgba(255,255,255,.3);
-      display:flex;align-items:center;justify-content:center;
-      font-family:var(--ff-display);font-size:36px;font-weight:600;color:var(--white);
-      flex-shrink:0;
-    }
-    .profile-hero h2{font-family:var(--ff-display);font-size:28px;font-weight:400;color:var(--white);margin-bottom:4px}
-    .profile-hero .meta{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7}
-
-    /* ══ EMPTY ══ */
-    .empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
-    .empty svg{width:44px;height:44px;stroke:var(--red-mid);fill:none;stroke-width:1.5;margin:0 auto 14px;display:block}
-    .empty p{font-size:14px}
-
-    /* ══ TOAST ══ */
-    #toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;padding:11px 20px;border-radius:8px;font-size:13px;font-weight:500;display:none;animation:toastIn .25s ease;box-shadow:0 4px 20px rgba(0,0,0,.2)}
-    #toast.ok{background:#166534;color:#fff}
-    #toast.err{background:var(--red);color:#fff}
-    #toast.info{background:var(--red-deep);color:#fff}
-    @keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    .spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    @media(max-width:900px){.sidebar{display:none}.main{margin-left:0}.stats-row{grid-template-columns:1fr 1fr}.auth-left{display:none}.auth-right{width:100%}}
-    @media(max-width:600px){.stats-row,.fgrid,.score-row{grid-template-columns:1fr}}
-  </style>
+  <link rel="stylesheet" href="student.css?v=20260803h">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -316,7 +32,7 @@
         </svg>
       </div>
       <div class="auth-brand">
-        <div class="auth-mark">A</div>
+        <div class="auth-mark"><img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/dbe7f497-3ab3-40ab-918d-ef6afb75abf3/df1yz9b-7948cf55-4635-4aee-9761-c056bd9984d3.png/v1/fill/w_370,h_370/icon_by_wizzzdesigns_df1yz9b-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MzcwIiwicGF0aCI6IlwvZlwvZGJlN2Y0OTctM2FiMy00MGFiLTkxOGQtZWY2YWZiNzVhYmYzXC9kZjF5ejliLTc5NDhjZjU1LTQ2MzUtNGFlZS05NzYxLWMwNTZiZDk5ODRkMy5wbmciLCJ3aWR0aCI6Ijw9MzcwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.x4M0dl8qNWTZA7iJrPcjOD4q-tpfhaOOjQKJBWl0B24" alt="Universiteti AAB"></div>
         <h1>Portali i<strong>Studentit</strong></h1>
         <p>Ngarko temën tënde të diplomës dhe merr analizën e plagjiaturës brenda minutave.</p>
         <div class="auth-feats">
@@ -349,8 +65,17 @@
 
         <!-- LOGIN -->
         <div id="form-login">
-          <div class="fg"><label>Username</label><input type="text" id="l-u" placeholder="arta.krasniqi" autocomplete="username"></div>
+          <div class="fg"><label>Email ose Username</label><input type="text" id="l-u" placeholder="emri.mbiemri@universitetiaab.com" autocomplete="username"></div>
           <div class="fg"><label>Fjalëkalimi</label><input type="password" id="l-p" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+          <div style="text-align:right;margin:-4px 0 10px">
+            <a href="#" onclick="switchAuth('forgot');return false" style="font-size:12px;color:var(--gold);text-decoration:none">Keni harruar fjalëkalimin?</a>
+          </div>
+        </div>
+
+        <!-- FORGOT PASSWORD -->
+        <div id="form-forgot" style="display:none">
+          <div class="fg"><label>Email i llogarisë</label><input type="email" id="fp-em" placeholder="emri.mbiemri@universitetiaab.com" onkeydown="if(event.key==='Enter')doForgotPassword()"></div>
+          <p style="font-size:12px;color:var(--muted);margin:-6px 0 12px;line-height:1.5">Do të merrni një email me lidhje për fjalëkalim të ri.</p>
         </div>
 
         <!-- REGISTER -->
@@ -359,16 +84,18 @@
             <div class="fg"><label>Emri *</label><input type="text" id="r-fn" placeholder="Arta"></div>
             <div class="fg"><label>Mbiemri *</label><input type="text" id="r-ln" placeholder="Krasniqi"></div>
           </div>
-          <div class="fg"><label>Email universitar *</label><input type="email" id="r-em" placeholder="arta.krasniqi@aab.edu.al"></div>
+          <div class="fg"><label>Email universitar *</label><input type="email" id="r-em" placeholder="emri.mbiemri@universitetiaab.com"></div>
           <div class="fg"><label>Numri Indeksit *</label><input type="text" id="r-ix" placeholder="2024/CS/0001"></div>
           <div class="fg">
-            <label>Departamenti *</label>
+            <label>Drejtimi / Specializimi *</label>
             <select id="r-dp">
-              <option value="">— Zgjidh —</option>
-              <option>Informatikë</option><option>Ekonomi dhe Biznes</option>
-              <option>Juridik</option><option>Mjekësi dhe Shëndet</option>
-              <option>Inxhinieri</option><option>Psikologji</option>
-              <option>Media dhe Komunikim</option>
+              <option value="">— Zgjidh drejtimin —</option>
+              <option>Programim</option>
+              <option>Programim dhe AI</option>
+              <option>Programim dhe Multimedia</option>
+              <option>Programim i Lojërave Kompjuterike</option>
+              <option>Siguri Kibernetike</option>
+              <option>Specializim në Inxhinieri Softuerike</option>
             </select>
           </div>
           <div class="fg-row">
@@ -380,7 +107,8 @@
         <div id="auth-msg"></div>
         <button class="btn-auth" id="btn-auth" onclick="authAction()">Hyr në Portal</button>
         <div class="auth-note" id="auth-note">
-          Nuk ke llogari? <a href="#" onclick="switchAuth('register');return false">Regjistrohu falas</a>
+          Vetëm me email <strong>@universitetiaab.com</strong>. Nuk ke llogari?
+          <a href="#" onclick="switchAuth('register');return false">Regjistrohu falas</a>
         </div>
       </div>
     </div>
@@ -393,413 +121,590 @@
 ══════════════════════════════════════ -->
 <div id="app">
 
-  <div class="topbar">
-    <div class="tb-left">
-      <div class="tb-mark">A</div>
-      <div class="tb-title">
-        AAB — Portali i Studentit
-        <small>Sistemi i Analizës së Plagjiaturës</small>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark"><img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/dbe7f497-3ab3-40ab-918d-ef6afb75abf3/df1yz9b-7948cf55-4635-4aee-9761-c056bd9984d3.png/v1/fill/w_370,h_370/icon_by_wizzzdesigns_df1yz9b-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MzcwIiwicGF0aCI6IlwvZlwvZGJlN2Y0OTctM2FiMy00MGFiLTkxOGQtZWY2YWZiNzVhYmYzXC9kZjF5ejliLTc5NDhjZjU1LTQ2MzUtNGFlZS05NzYxLWMwNTZiZDk5ODRkMy5wbmciLCJ3aWR0aCI6Ijw9MzcwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.x4M0dl8qNWTZA7iJrPcjOD4q-tpfhaOOjQKJBWl0B24" alt="Universiteti AAB"></div>
+      <div>
+        <div class="logo-text-top">Universiteti AAB</div>
+        <div class="logo-text-bottom">Portali i Studentit</div>
       </div>
     </div>
-    <div class="tb-right">
-      <div class="tb-pill" id="tb-dept">—</div>
-      <div class="tb-user">
-        <div class="tb-av" id="tb-av">S</div>
-        <span id="tb-name">Student</span>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Kryesore</div>
+      <button type="button" class="nav-item active" onclick="showPage('home')" id="nav-home">
+        <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Ballina
+      </button>
+      <div class="nav-section">Tema ime</div>
+      <button type="button" class="nav-item" onclick="showPage('submit')" id="nav-submit">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Ngarko Temën
+      </button>
+      <button type="button" class="nav-item" onclick="showPage('status')" id="nav-status">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Statusi
+      </button>
+      <div class="nav-section">Llogaria</div>
+      <button type="button" class="nav-item" onclick="showPage('profile')" id="nav-profile">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profili im
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-pill">
+        <div class="user-avatar" id="sb-av">S</div>
+        <div>
+          <div class="user-name" id="sb-name">Student</div>
+          <div class="user-role" id="sb-dept">Drejtimi</div>
+        </div>
+        <button type="button" class="logout-btn" title="Dilni" onclick="doLogout()">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
       </div>
-      <button class="btn-out" onclick="doLogout()">Dilni</button>
     </div>
-  </div>
+  </aside>
 
-  <div class="sidebar">
-    <div class="nav-sect">Kryesore</div>
-    <div class="nav-item active" onclick="showPage('home')" id="nav-home">
-      <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Ballina
-    </div>
-    <div class="nav-sect">Tema ime</div>
-    <div class="nav-item" onclick="showPage('submit')" id="nav-submit">
-      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      Ngarko Temën
-    </div>
-    <div class="nav-item" onclick="showPage('status')" id="nav-status">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      Statusi
-    </div>
-    <div class="nav-item" onclick="showPage('result')" id="nav-result">
-      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      Rezultati
-    </div>
-    <div class="nav-sect">Llogaria</div>
-    <div class="nav-item" onclick="showPage('profile')" id="nav-profile">
-      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      Profili im
-    </div>
-  </div>
+  <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
   <div class="main">
-
-    <!-- ────── HOME ────── -->
-    <div class="page active" id="page-home">
-      <div class="ph">
-        <h1>Mirë se erdhe, <strong id="home-name">Student</strong></h1>
-        <p id="home-dept">Universiteti AAB</p>
+    <div class="topbar">
+      <div class="topbar-left">
+        <button type="button" class="topbar-icon-btn mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="page-breadcrumb">AAB Student / <span id="breadcrumb-current">Ballina</span></span>
       </div>
-
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="val" id="hs-themes">0</div><div class="lbl">Tema të ngarkuara</div>
-          <div class="ico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-        </div>
-        <div class="stat-card">
-          <div class="val" id="hs-analyzed">0</div><div class="lbl">Të analizuara</div>
-          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
-        </div>
-        <div class="stat-card">
-          <div class="val" id="hs-score">—</div><div class="lbl">Rezultati i fundit</div>
-          <div class="ico"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-        </div>
+      <div class="topbar-right">
+        <div class="live-badge"><div class="live-dot"></div><span>Portali Aktiv</span></div>
+        <button type="button" class="topbar-icon-btn" title="Rifresko" onclick="refreshCurrentPage()">
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        </button>
       </div>
+    </div>
 
-      <!-- Quick action -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
-        <div class="card" style="background:linear-gradient(145deg,var(--red-deep),var(--red3));border:none;color:#fff;cursor:pointer" onclick="showPage('submit')">
-          <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);margin-bottom:14px">Veprim i shpejtë</div>
-          <div style="font-family:var(--ff-display);font-size:26px;font-weight:300;color:#fff;margin-bottom:8px">Ngarko temën<br><strong>tënde tani</strong></div>
-          <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px">PDF, DOCX ose TXT — analiza fillon automatikisht</div>
-          <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:500">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            Ngarko tani →
+    <div class="content">
+
+      <!-- ────── HOME ────── -->
+      <div class="page active" id="page-home">
+        <div class="page-hero">
+          <div class="page-hero-inner">
+            <div>
+              <h1 class="page-hero-title">Mirë se erdhe, <strong id="home-name">Student</strong></h1>
+              <p class="page-hero-sub" id="home-dept">Universiteti AAB — ngarko temën dhe ndiq analizën e plagjiaturës.</p>
+            </div>
+            <div class="summary-chips" id="home-chips"></div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-title" style="margin-bottom:1rem">Çfarë duhet të dish</div>
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <div style="display:flex;gap:12px;align-items:flex-start">
-              <div style="width:28px;height:28px;border-radius:6px;background:var(--red-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <span class="stat-card-label">Tema të ngarkuara</span>
+              <div class="stat-icon red"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            </div>
+            <div class="stat-value" id="hs-themes">0</div>
+            <div class="stat-footer">total në sistem</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <span class="stat-card-label">Të analizuara</span>
+              <div class="stat-icon green"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+            <div class="stat-value" id="hs-analyzed">0</div>
+            <div class="stat-footer up" id="hs-analyzed-foot">0% e totalit</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <span class="stat-card-label">Në proces</span>
+              <div class="stat-icon blue"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            </div>
+            <div class="stat-value" id="hs-pending">0</div>
+            <div class="stat-footer">duke u analizuar</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <span class="stat-card-label">Rezultati fundit</span>
+              <div class="stat-icon gold"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            </div>
+            <div class="stat-value" id="hs-score">—</div>
+            <div class="stat-footer" id="hs-score-foot">ngjashmëri</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="quick-action-card" onclick="showPage('submit')">
+            <div class="quick-action-eyebrow">Veprim i shpejtë</div>
+            <div class="quick-action-title">Ngarko temën<br><strong>tënde tani</strong></div>
+            <div class="quick-action-desc">PDF, DOCX ose TXT — analiza fillon automatikisht pas dërgimit te profesori.</div>
+            <div class="quick-action-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Ngarko tani →
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">Çfarë duhet të dish</div></div>
+            <div class="panel-body">
+              <div class="ai-box">
+                <strong>Konfidencialiteti</strong>
+                Tema jote krahasohet me dokumente të enkriptuara. Përmbajtja e tyre nuk shfaqet kurrë te studentët e tjerë.
               </div>
+              <div class="ai-box" style="border-left-color:var(--gold);background:#FDF3D8">
+                <strong style="color:#6D4C01">Analiza AI</strong>
+                Inteligjenca artificiale kontrollon burime konfidenciale, bazën interne dhe internetin për ngjashmëri.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-charts">
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">Distribucioni i statusit</div></div>
+            <div class="panel-body"><div class="chart-wrap chart-wrap-donut"><canvas id="chart-stu-status"></canvas></div></div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Temat e mia</div>
+              <button type="button" class="panel-action" onclick="showPage('status')">Shiko të gjitha →</button>
+            </div>
+            <div class="panel-body" id="home-theses-list">
+              <div class="empty">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <p>Nuk ke ngarkuar asnjë temë ende.<br>Kliko "Ngarko Temën" për të filluar.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ────── NGARKO TEMËN ────── -->
+      <div class="page" id="page-submit">
+        <div class="page-hero page-hero-compact">
+          <div class="page-hero-inner">
+            <div>
+              <h1 class="page-hero-title">Ngarko <strong>Temën</strong></h1>
+              <p class="page-hero-sub">Ngarko skedarin dhe dërgoje te profesori i caktuar për analizë.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">Skedari i temës</div></div>
+            <div class="panel-body">
+              <div class="upload-zone" id="uz" onclick="document.getElementById('tfile').click()">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <p>Tërhiq ose kliko për të zgjedhur</p>
+                <span>PDF, DOCX ose TXT — Maks 20MB</span>
+                <div class="fname" id="tfile-name" style="display:none"></div>
+                <input type="file" id="tfile" accept=".pdf,.docx,.txt" style="display:none" onchange="onFileSelect(this)">
+              </div>
+
+              <div class="fgrid">
+                <div class="fgroup"><label>Titulli i temës *</label><input type="text" id="t-ttl" placeholder="p.sh. Inteligjenca Artificiale..."></div>
+                <div class="fgroup"><label>Viti akademik</label><input type="number" id="t-yr" placeholder="2024" value="2024"></div>
+              </div>
+              <div class="fgroup">
+                <label>Profesori i caktuar *</label>
+                <select id="t-prof" required>
+                  <option value="">Duke ngarkuar listën e profesorëve...</option>
+                </select>
+              </div>
+
+              <div style="background:var(--smoke);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:1rem">
+                <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Opsionet e analizës</div>
+                <div class="check-row" style="margin-bottom:0">
+                  <label><input type="checkbox" id="o-conf" checked> Konfidencial</label>
+                  <label><input type="checkbox" id="o-int" checked> Bazë interne</label>
+                  <label><input type="checkbox" id="o-web" checked> Internet</label>
+                </div>
+              </div>
+
+              <div class="prog-wrap" id="sub-prog">
+                <div class="prog-lbl" id="sub-prog-txt">Duke ngarkuar...</div>
+                <div class="prog-bg"><div class="prog-bar" id="sub-prog-bar" style="width:0%"></div></div>
+              </div>
+
+              <button type="button" class="btn btn-primary btn-full" id="btn-sub" style="margin-top:.75rem" onclick="submitThesis()">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                Dërgo te Profesori
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <div class="panel" style="background:linear-gradient(145deg,#1a0505,var(--red3));border:none;color:#fff;margin-bottom:20px">
+              <div class="panel-header" style="background:transparent;border-color:rgba(255,255,255,.08)">
+                <div class="panel-title" style="color:var(--gold2);font-size:10px;letter-spacing:.14em;text-transform:uppercase">Procesi i analizës</div>
+              </div>
+              <div class="panel-body">
+                <div class="step-list">
+                  <div class="step-item"><div class="step-num">1</div><div><div class="step-title">Ngarkim</div><div class="step-desc">Teksti ekstraktohet nga skedari</div></div></div>
+                  <div class="step-item"><div class="step-num">2</div><div><div class="step-title">Krahasim intern</div><div class="step-desc">Kontrollohet me temat ekzistuese</div></div></div>
+                  <div class="step-item"><div class="step-num">3</div><div><div class="step-title">Kërkim web</div><div class="step-desc">AI kontrollon burime online</div></div></div>
+                  <div class="step-item"><div class="step-num gold">4</div><div><div class="step-title">Raporti</div><div class="step-desc">Rezultat i plotë me rekomandime</div></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-header"><div class="panel-title">Formatet e pranuara</div></div>
+              <div class="panel-body" style="display:flex;flex-direction:column;gap:8px">
+                <div class="format-pill"><strong>PDF</strong><span>Adobe PDF — formati i preferuar</span></div>
+                <div class="format-pill"><strong>DOCX</strong><span>Microsoft Word Document</span></div>
+                <div class="format-pill"><strong>TXT</strong><span>Tekst i thjeshtë</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ────── STATUSI ────── -->
+      <div class="page" id="page-status">
+        <div class="page-hero page-hero-compact">
+          <div class="page-hero-inner">
+            <div>
+              <h1 class="page-hero-title">Statusi i <strong>Analizës</strong></h1>
+              <p class="page-hero-sub">Gjurmoje progresin e temës tënde dhe shkarko skedarët.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Temat e mia</div>
+            <button type="button" class="btn btn-ghost" style="padding:6px 14px;font-size:12px" onclick="loadMyTheses()">↺ Rifresko</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Tema</th><th>Mentori</th><th>Viti</th><th>Statusi</th><th>Ngjashmëria</th><th>Data</th><th>Veprime</th></tr></thead>
+              <tbody id="status-tbody">
+                <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem">Duke ngarkuar...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Rrjedha e procesit</div></div>
+          <div class="panel-body">
+            <div class="timeline" id="status-timeline">
+              <div class="tl-item">
+                <div class="tl-dot"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+                <div class="tl-content"><div class="tl-title">Tema u ngarkua</div><div class="tl-desc">Skedari u pranua dhe teksti u ekstraktua</div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <div class="tl-content"><div class="tl-title">Krahasim intern</div><div class="tl-desc">Kontrollohet me databazën konfidenciale</div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+                <div class="tl-content"><div class="tl-title">Kërkim në internet</div><div class="tl-desc">AI kontrollon burime online</div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <div class="tl-content"><div class="tl-title">Raporti final</div><div class="tl-desc">Gjenerohet rezultati i plotë</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ────── RAPORTI I ANALIZËS (si te profesori) ────── -->
+      <div class="page" id="page-report">
+        <div class="page-hero page-hero-compact">
+          <div class="page-hero-inner">
+            <div>
+              <h1 class="page-hero-title">Raporti i <strong>Analizës</strong></h1>
+              <p class="page-hero-sub" id="report-hero-sub">Skori, burimet interne, web dhe rreshtat e theksuar — në një faqe.</p>
+            </div>
+            <div class="report-hero-actions">
+              <button type="button" class="btn btn-hero" onclick="showPage('status')">← Lista e temave</button>
+              <button type="button" class="btn btn-hero" onclick="showPage('home')">Ballina</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="report-page-wrap">
+          <div class="panel report-panel report-panel-full" id="result-card" style="display:block">
+            <div class="panel-header report-panel-head">
               <div>
-                <div style="font-size:13px;font-weight:500;margin-bottom:2px">Konfidencialiteti</div>
-                <div style="font-size:12px;color:var(--muted);line-height:1.5">Tema jote krahasohet me dokumente të enkriptuara. Permbajtja e tyre nuk shfaqet kurrë.</div>
+                <div class="panel-title">Rezultati i plotë</div>
+                <p class="report-sub" id="res-thesis-label">Rezultati i detajuar i plagjiaturës</p>
               </div>
+              <span class="badge b-gold" id="res-risk">—</span>
             </div>
-            <div style="display:flex;gap:12px;align-items:flex-start">
-              <div style="width:28px;height:28px;border-radius:6px;background:var(--red-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <div class="panel-body report-body">
+              <div class="report-hero" id="report-hero">
+                <div class="score-ring-wrap">
+                  <div class="score-ring" id="score-ring">
+                    <div class="big" id="res-pct">—</div>
+                    <div class="sm">plagjiaturë totale</div>
+                  </div>
+                  <div class="report-verdict" id="res-verdict">Duke ngarkuar rezultatin…</div>
+                </div>
+                <div class="report-metrics">
+                  <div class="metric-row">
+                    <div class="metric-top">
+                      <span class="metric-label">Databaza e brendshme</span>
+                      <strong class="metric-val" id="res-int">—</strong>
+                    </div>
+                    <div class="metric-track"><div class="metric-fill metric-int" id="res-int-bar" style="width:0%"></div></div>
+                  </div>
+                  <div class="metric-row">
+                    <div class="metric-top">
+                      <span class="metric-label">Internet</span>
+                      <strong class="metric-val" id="res-web">—</strong>
+                    </div>
+                    <div class="metric-track"><div class="metric-fill metric-web" id="res-web-bar" style="width:0%"></div></div>
+                  </div>
+                  <div class="metric-row">
+                    <div class="metric-top">
+                      <span class="metric-label">AI / parafrazim <small style="font-weight:400;color:var(--muted)">(jo në total)</small></span>
+                      <strong class="metric-val" id="res-ai">—</strong>
+                    </div>
+                    <div class="metric-track"><div class="metric-fill metric-ai" id="res-ai-bar" style="width:0%"></div></div>
+                    <div class="metric-note" id="res-ai-note" style="font-size:11px;color:var(--muted);margin-top:4px"></div>
+                  </div>
+                </div>
               </div>
-              <div>
-                <div style="font-size:13px;font-weight:500;margin-bottom:2px">Analiza AI</div>
-                <div style="font-size:12px;color:var(--muted);line-height:1.5">Inteligjenca artificiale kontrollon miliona burime — revista, libra, internet.</div>
-              </div>
-            </div>
-            <div style="display:flex;gap:12px;align-items:flex-start">
-              <div style="width:28px;height:28px;border-radius:6px;background:var(--red-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              </div>
-              <div>
-                <div style="font-size:13px;font-weight:500;margin-bottom:2px">Rezultati</div>
-                <div style="font-size:12px;color:var(--muted);line-height:1.5">Merr raport të detajuar me seksionet problematike dhe rekomandime.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="card" style="margin-top:1.25rem">
-        <div class="card-head"><div class="card-title">Temat e mia</div></div>
-        <div id="home-theses-list">
-          <div class="empty"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p>Nuk ke ngarkuar asnjë temë ende.<br>Klikoni "Ngarko Temën" për të filluar.</p></div>
-        </div>
-      </div>
-    </div>
+              <div id="res-auto-banner" style="display:none"></div>
+              <div id="stu-prof-comment" style="display:none;margin-bottom:1.25rem"></div>
 
-    <!-- ────── NGARKO TEMËN ────── -->
-    <div class="page" id="page-submit">
-      <div class="ph">
-        <h1>Ngarko <strong>Temën</strong></h1>
-        <p>Ngarko temën tënde dhe nis analizën e plagjiaturës</p>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:1.5rem;align-items:start">
-        <div class="card">
-          <div class="card-title" style="margin-bottom:1.1rem">Skedari i temës</div>
-          <div class="upload-zone" id="uz" onclick="document.getElementById('tfile').click()">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            <p>Tërhiq ose kliko për të zgjedhur</p>
-            <span>PDF, DOCX ose TXT — Maks 20MB</span>
-            <div class="fname" id="tfile-name" style="display:none"></div>
-            <input type="file" id="tfile" accept=".pdf,.docx,.txt" style="display:none"
-              onchange="onFileSelect(this)">
-          </div>
-
-          <div class="fgrid">
-            <div class="fgroup"><label>Titulli i temës *</label><input type="text" id="t-ttl" placeholder="p.sh. Inteligjenca Artificiale..."></div>
-            <div class="fgroup"><label>Viti akademik</label><input type="number" id="t-yr" placeholder="2024" value="2024"></div>
-          </div>
-          <div class="fgroup" style="margin-bottom:12px">
-            <label>Profesori i caktuar *</label>
-            <select id="t-prof" required>
-              <option value="">Duke ngarkuar listën e profesorëve...</option>
-            </select>
-          </div>
-
-          <div style="background:var(--smoke);border-radius:8px;padding:12px 14px;margin-bottom:1rem">
-            <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Opsionet e analizës</div>
-            <div class="check-row">
-              <label><input type="checkbox" id="o-conf" checked> Konfidencial</label>
-              <label><input type="checkbox" id="o-int"  checked> Bazë interne</label>
-              <label><input type="checkbox" id="o-web"  checked> Internet</label>
-            </div>
-          </div>
-
-          <div class="prog-wrap" id="sub-prog">
-            <div class="prog-lbl" id="sub-prog-txt">Duke ngarkuar...</div>
-            <div class="prog-bg"><div class="prog-bar" id="sub-prog-bar" style="width:0%"></div></div>
-          </div>
-
-          <button class="btn btn-primary btn-full" id="btn-sub" style="margin-top:.75rem" onclick="submitThesis()">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            Dërgo te Profesori
-          </button>
-        </div>
-
-        <!-- Info panel -->
-        <div>
-          <div class="card" style="background:linear-gradient(145deg,#1a0505,var(--red3));border:none;color:#fff;margin-bottom:1rem">
-            <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);margin-bottom:16px">Procesi i analizës</div>
-            <div style="display:flex;flex-direction:column;gap:16px">
-              <div style="display:flex;gap:12px">
-                <div style="width:26px;height:26px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">1</div>
-                <div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:2px">Ngarkim</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.5">Teksti ekstraktohet nga skedari</div></div>
+              <div id="res-open-highlighted" class="hl-open-wrap" style="display:none">
+                <button type="button" class="hl-open-btn" onclick="openAnalyzedThesisWithHighlights()">
+                  <span class="hl-open-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </span>
+                  <span class="hl-open-text">
+                    <strong>Hap temën me rreshtat e theksuar</strong>
+                    <small>Shiko tekstin tënd me përputhjet e ngjyrosura për t’i përmirësuar</small>
+                  </span>
+                  <span class="hl-open-arrow" aria-hidden="true">→</span>
+                </button>
               </div>
-              <div style="display:flex;gap:12px">
-                <div style="width:26px;height:26px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">2</div>
-                <div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:2px">Krahasim intern</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.5">Kontrollohet me temave ekzistuese</div></div>
+
+              <div class="report-grid-2">
+                <div class="report-section">
+                  <div class="report-section-label">Përmbledhje</div>
+                  <div class="ai-summary" id="res-summary"></div>
+                  <div id="res-ai-banner" style="display:none;margin-top:12px"></div>
+                </div>
+                <div class="report-section">
+                  <div class="report-section-label">Statistikat</div>
+                  <div id="res-match-stats" class="turnitin-stats-panel" style="display:none"></div>
+                </div>
               </div>
-              <div style="display:flex;gap:12px">
-                <div style="width:26px;height:26px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">3</div>
-                <div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:2px">Kërkim web</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.5">AI kontrollon burime online</div></div>
+
+              <div class="report-section">
+                <div class="report-section-label">Dokumentet burimore</div>
+                <div id="res-source-docs" class="turnitin-sources-panel" style="display:none"></div>
               </div>
-              <div style="display:flex;gap:12px">
-                <div style="width:26px;height:26px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--red-deep);flex-shrink:0">4</div>
-                <div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:2px">Raporti</div><div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.5">Rezultat i plotë me rekomandime</div></div>
+
+              <div class="report-section">
+                <div class="report-section-label">Rreshtat e identifikuar</div>
+                <div id="res-highlight-preview" class="hl-result-panel" style="display:none"></div>
               </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title" style="margin-bottom:.8rem">Formatet e pranuara</div>
-            <div style="display:flex;flex-direction:column;gap:8px">
-              <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--cream);border-radius:8px">
-                <span style="font-weight:700;color:var(--red);font-size:13px">PDF</span>
-                <span style="font-size:12px;color:var(--muted)">Adobe PDF — formati i preferuar</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--cream);border-radius:8px">
-                <span style="font-weight:700;color:var(--red);font-size:13px">DOCX</span>
-                <span style="font-size:12px;color:var(--muted)">Microsoft Word Document</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--cream);border-radius:8px">
-                <span style="font-weight:700;color:var(--red);font-size:13px">TXT</span>
-                <span style="font-size:12px;color:var(--muted)">Tekst i thjeshtë</span>
+
+              <div class="report-section">
+                <div class="report-section-label">Burimet e gjetura (intern + web)</div>
+                <div class="matches-list" id="res-matches"></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- ────── STATUSI ────── -->
-    <div class="page" id="page-status">
-      <div class="ph">
-        <h1>Statusi i <strong>Analizës</strong></h1>
-        <p>Gjurmoje progresin e temës tënde</p>
-      </div>
-      <div class="card">
-        <div class="card-head">
-          <div class="card-title">Temat e mia</div>
-          <button class="btn btn-secondary" style="padding:6px 14px;font-size:12px" onclick="loadMyTheses()">↺ Rifresko</button>
-        </div>
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>Tema</th><th>Mentori</th><th>Viti</th><th>Statusi</th><th>Data</th><th></th></tr></thead>
-            <tbody id="status-tbody">
-              <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">Duke ngarkuar...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title" style="margin-bottom:1.2rem">Rrjedha e procesit</div>
-        <div class="timeline" id="status-timeline">
-          <div class="tl-item">
-            <div class="tl-dot"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
-            <div class="tl-content"><div class="tl-title">Tema u ngarkua</div><div class="tl-desc">Skedari u pranua dhe teksti u ekstraktua</div></div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-dot"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-            <div class="tl-content"><div class="tl-title">Krahasim intern</div><div class="tl-desc">Kontrollohet me databazën konfidenciale</div></div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-dot"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
-            <div class="tl-content"><div class="tl-title">Kërkim në internet</div><div class="tl-desc">AI kontrollon burime online</div></div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-dot"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div class="tl-content"><div class="tl-title">Raporti final</div><div class="tl-desc">Gjenerohet rezultati i plotë</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ────── REZULTATI ────── -->
-    <div class="page" id="page-result">
-      <div class="ph">
-        <h1><strong>Rezultati</strong> i Analizës</h1>
-        <p>Raporti i plagjiaturës për temën tënde</p>
-      </div>
-
-      <div id="result-empty" class="empty" style="padding:4rem">
-        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        <p>Nuk ka rezultat ende.<br>Ngarko temën tënde dhe prit analizën.</p>
-        <button class="btn btn-primary" style="margin-top:1rem" onclick="showPage('submit')">Ngarko temën →</button>
-      </div>
-
-      <div id="result-content" style="display:none">
-        <div class="result-hero">
-          <div class="score-big" id="r-big">—</div>
-          <div class="score-sub">plagjiaturë e zbuluar</div>
-          <div class="risk-pill" id="r-risk">—</div>
-        </div>
-
-        <div class="score-row" style="grid-template-columns:repeat(2,1fr)">
-          <div class="sc-item"><div class="sv" id="r-final-status">—</div><div class="sl">Statusi final</div></div>
-          <div class="sc-item"><div class="sv" id="r-review-date">—</div><div class="sl">Data e review</div></div>
-        </div>
-
-        <div class="ai-box" style="margin-top:1rem">
-          <strong>Komente të profesorit</strong>
-          <span id="r-comments">—</span>
-        </div>
-
-        <div class="score-row">
-          <div class="sc-item"><div class="sv" id="r-conf">—</div><div class="sl">Konfidencial</div></div>
-          <div class="sc-item"><div class="sv" id="r-int">—</div><div class="sl">Intern</div></div>
-          <div class="sc-item"><div class="sv" id="r-web">—</div><div class="sl">Web</div></div>
-        </div>
-
-        <div class="ai-box">
-          <strong>Analiza AI</strong>
-          <span id="r-summary">—</span>
-        </div>
-
-        <div class="card">
-          <div class="card-head">
-            <div class="card-title">Seksionet e flamëruara</div>
-            <span id="r-match-count" class="badge b-red"></span>
-          </div>
-          <div id="r-matches"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title" style="margin-bottom:.8rem">Rekomandimet</div>
-          <div id="r-reco" style="font-size:13px;line-height:1.8;color:var(--text)"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ────── PROFILI ────── -->
-    <div class="page" id="page-profile">
-      <div class="ph">
-        <h1>Profili <strong>im</strong></h1>
-        <p>Informacionet e llogarisë tënde</p>
-      </div>
-
-      <div class="profile-hero">
-        <div class="profile-av-big" id="p-av">S</div>
-        <div>
-          <h2 id="p-name">—</h2>
-          <div class="meta" id="p-meta">—</div>
-        </div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
-        <div class="card">
-          <div class="card-title" style="margin-bottom:1rem">Të dhënat</div>
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
-              <span style="font-size:12px;color:var(--muted)">Username</span>
-              <span style="font-size:13px;font-weight:500" id="p-username">—</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
-              <span style="font-size:12px;color:var(--muted)">Email</span>
-              <span style="font-size:13px;font-weight:500" id="p-email">—</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
-              <span style="font-size:12px;color:var(--muted)">Departamenti</span>
-              <span style="font-size:13px;font-weight:500" id="p-dept">—</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:10px 0">
-              <span style="font-size:12px;color:var(--muted)">Roli</span>
-              <span class="badge b-red">Student</span>
+      <!-- ────── PROFILI ────── -->
+      <div class="page" id="page-profile">
+        <div class="page-hero page-hero-compact">
+          <div class="page-hero-inner">
+            <div>
+              <h1 class="page-hero-title">Profili <strong>im</strong></h1>
+              <p class="page-hero-sub">Informacionet e llogarisë dhe siguria.</p>
             </div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-title" style="margin-bottom:1rem">Ndysho fjalëkalimin</div>
-          <div class="fgroup" style="margin-bottom:12px"><label>Fjalëkalimi i ri</label><input type="password" id="np-pw" placeholder="Min. 8 karaktere"></div>
-          <div class="fgroup" style="margin-bottom:16px"><label>Konfirmo</label><input type="password" id="np-pw2" placeholder="Përsërit"></div>
-          <button class="btn btn-primary" onclick="changePassword()">Ndrysho fjalëkalimin</button>
+
+        <div class="profile-hero">
+          <div class="profile-av-big" id="p-av">S</div>
+          <div>
+            <h2 id="p-name">—</h2>
+            <div class="meta" id="p-meta">—</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">Të dhënat</div></div>
+            <div class="panel-body">
+              <div class="data-row"><span class="data-label">Username</span><span class="data-value" id="p-username">—</span></div>
+              <div class="data-row"><span class="data-label">Email</span><span class="data-value" id="p-email">—</span></div>
+              <div class="data-row"><span class="data-label">Drejtimi</span><span class="data-value" id="p-dept">—</span></div>
+              <div class="data-row"><span class="data-label">Roli</span><span class="badge b-red">Student</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">Ndrysho fjalëkalimin</div></div>
+            <div class="panel-body">
+              <div class="fgroup"><label>Fjalëkalimi aktual</label><input type="password" id="cp-cur" placeholder="Fjalëkalimi i tanishëm" autocomplete="current-password"></div>
+              <div class="fgroup"><label>Fjalëkalimi i ri</label><input type="password" id="np-pw" placeholder="Min. 8 karaktere" autocomplete="new-password"></div>
+              <div class="fgroup"><label>Konfirmo</label><input type="password" id="np-pw2" placeholder="Përsërit" autocomplete="new-password"></div>
+              <button type="button" class="btn btn-primary" onclick="changePassword()">Ndrysho fjalëkalimin</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
+    </div><!-- /content -->
   </div><!-- /main -->
 </div><!-- /app -->
 
 <div id="toast"></div>
 
+<!-- Shikuesi i temës (PDF / TXT / DOCX) -->
+<div id="thesis-viewer-backdrop" class="thesis-viewer-backdrop" onclick="if(event.target===this)closeThesisViewer()">
+  <div class="thesis-viewer" role="dialog" aria-labelledby="thesis-viewer-title" onclick="event.stopPropagation()">
+    <div class="thesis-viewer-head">
+      <div class="thesis-viewer-head-text">
+        <h3 id="thesis-viewer-title">Tema</h3>
+        <p id="thesis-viewer-meta"></p>
+      </div>
+      <div class="thesis-viewer-head-actions">
+        <button type="button" class="btn btn-ghost" style="padding:6px 14px;font-size:12px" onclick="downloadCurrentThesis()">Shkarko</button>
+        <button type="button" class="thesis-viewer-close" onclick="closeThesisViewer()" aria-label="Mbyll">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="thesis-viewer-body thesis-viewer-body-split">
+      <div class="thesis-viewer-main">
+        <div id="thesis-viewer-loading" class="thesis-viewer-loading">Duke ngarkuar temën...</div>
+        <iframe id="thesis-viewer-frame" class="thesis-viewer-frame" title="Parapamje e temës"></iframe>
+        <pre id="thesis-viewer-text" class="thesis-viewer-text"></pre>
+        <div id="thesis-viewer-fallback" class="thesis-viewer-fallback"></div>
+      </div>
+      <aside class="thesis-viewer-hl-pane" id="thesis-viewer-hl-pane" style="display:none">
+        <div class="thesis-viewer-hl-head">Pjesët e theksuara</div>
+        <div class="thesis-viewer-hl-body" id="thesis-viewer-hl-list"></div>
+      </aside>
+    </div>
+  </div>
+</div>
+
 <script>
 const BACKEND_ORIGIN = (() => {
   const origin = window.location.origin;
-  if (origin && origin !== 'null' && origin.includes(':8000')) return origin;
-  return 'http://localhost:8000';
+  if (origin && origin !== 'null' && !origin.startsWith('file:') && /:8000$/.test(origin)) {
+    return origin;
+  }
+  return 'http://127.0.0.1:8000';
 })();
 const API = `${BACKEND_ORIGIN}/api`;
+
+function apiError(detail) {
+  if (!detail) return 'Gabim i panjohur';
+  if (typeof detail === 'string') return detail;
+  if (Array.isArray(detail)) {
+    return detail.map(x => {
+      const field = x.loc && x.loc.length ? x.loc[x.loc.length - 1] : '';
+      if (x.type === 'missing' || x.msg === 'Field required') {
+        if (field === 'register_as') return 'Ringarko faqen (Ctrl+F5) dhe provo përsëri regjistrimin';
+        return field ? `Mungon fusha: ${field}` : 'Mungon një fushë e detyrueshme';
+      }
+      return x.msg || x.message || JSON.stringify(x);
+    }).join('. ');
+  }
+  return String(detail);
+}
 let TOKEN = localStorage.getItem('stu_token');
 let ME    = JSON.parse(localStorage.getItem('stu_user') || 'null');
 let LAST_RESULT_ID = null;
+
+const STUDENT_EMAIL_SUFFIX = '@universitetiaab.com';
+function isStudentEmail(email) {
+  return String(email || '').trim().toLowerCase().endsWith(STUDENT_EMAIL_SUFFIX);
+}
 
 // ══ AUTH MODE ══
 let authMode = 'login';
 function switchAuth(mode) {
   authMode = mode;
-  const isL = mode === 'login';
-  document.getElementById('atab-login').classList.toggle('active', isL);
-  document.getElementById('atab-register').classList.toggle('active', !isL);
-  document.getElementById('form-login').style.display    = isL ? '' : 'none';
-  document.getElementById('form-register').style.display = isL ? 'none' : '';
-  document.getElementById('auth-title').innerHTML = isL ? 'Mirë se <strong>erdhe</strong>' : 'Krijo <strong>llogarinë</strong>';
-  document.getElementById('auth-sub').textContent  = isL ? 'Hyr në portalin e studentit' : 'Regjistrohu falas në AAB';
-  document.getElementById('btn-auth').textContent   = isL ? 'Hyr në Portal' : 'Regjistrohu';
-  document.getElementById('auth-note').innerHTML    = isL
-    ? 'Nuk ke llogari? <a href="#" onclick="switchAuth(\'register\');return false">Regjistrohu falas</a>'
-    : 'Ke llogari? <a href="#" onclick="switchAuth(\'login\');return false">Hyr këtu</a>';
+  const isLogin = mode === 'login';
+  const isForgot = mode === 'forgot';
+  const isRegister = mode === 'register';
+  document.getElementById('atab-login').classList.toggle('active', isLogin || isForgot);
+  document.getElementById('atab-register').classList.toggle('active', isRegister);
+  document.getElementById('form-login').style.display = isLogin ? '' : 'none';
+  document.getElementById('form-forgot').style.display = isForgot ? '' : 'none';
+  document.getElementById('form-register').style.display = isRegister ? '' : 'none';
+  if (isForgot) {
+    document.getElementById('auth-title').innerHTML = 'Rivendos <strong>fjalëkalimin</strong>';
+    document.getElementById('auth-sub').textContent = 'Dërgo lidhjen në email-in tënd';
+    document.getElementById('btn-auth').textContent = 'Dërgo email-in';
+    document.getElementById('auth-note').innerHTML = '<a href="#" onclick="switchAuth(\'login\');return false">← Kthehu te hyrja</a>';
+  } else if (isLogin) {
+    document.getElementById('auth-title').innerHTML = 'Mirë se <strong>erdhe</strong>';
+    document.getElementById('auth-sub').textContent = 'Hyr në portalin e studentit';
+    document.getElementById('btn-auth').textContent = 'Hyr në Portal';
+    document.getElementById('auth-note').innerHTML = 'Nuk ke llogari? <a href="#" onclick="switchAuth(\'register\');return false">Regjistrohu falas</a>';
+  } else {
+    document.getElementById('auth-title').innerHTML = 'Krijo <strong>llogarinë</strong>';
+    document.getElementById('auth-sub').textContent = 'Regjistrohu falas në AAB';
+    document.getElementById('btn-auth').textContent = 'Regjistrohu';
+    document.getElementById('auth-note').innerHTML = 'Ke llogari? <a href="#" onclick="switchAuth(\'login\');return false">Hyr këtu</a>';
+  }
   clearMsg();
 }
 
-function authAction() { authMode === 'login' ? doLogin() : doRegister(); }
+function authAction() {
+  if (authMode === 'forgot') doForgotPassword();
+  else if (authMode === 'login') doLogin();
+  else doRegister();
+}
+
+async function doForgotPassword() {
+  const email = document.getElementById('fp-em').value.trim();
+  if (!email || !email.includes('@')) return showMsg('Shkruaj email-in e llogarisë', 'err');
+  setBusy(true, 'Duke dërguar...');
+  try {
+    const r = await fetch(API + '/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) { showMsg(apiError(d.detail) || 'Gabim gjatë dërgimit', 'err'); return; }
+    if (d.dev_reset_url) console.info('Dev reset URL:', d.dev_reset_url);
+    showMsg(d.message || 'Kontrollo email-in për lidhjen e rivendosjes.', 'ok');
+  } catch { showMsg('Nuk u lidh me serverin', 'err'); }
+  finally { setBusy(false); }
+}
 
 async function doLogin() {
   const u = document.getElementById('l-u').value.trim();
   const p = document.getElementById('l-p').value;
   if (!u||!p) return showMsg('Plotëso të dy fushat','err');
+  if (u.includes('@') && !isStudentEmail(u)) {
+    return showMsg('Studentët kyçen vetëm me email @universitetiaab.com ose username të regjistruar','err');
+  }
   setBusy(true,'Duke u kyçur...');
   try {
     const r = await fetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
     const d = await r.json();
-    if (!r.ok) { showMsg(d.detail||'Kredenciale të gabuara','err'); return; }
+    if (!r.ok) { showMsg(apiError(d.detail)||'Kredenciale të gabuara','err'); return; }
+    if (d.user?.role === 'admin') {
+      localStorage.setItem('admin_token', d.access_token);
+      localStorage.setItem('admin_user', JSON.stringify(d.user));
+      window.location.replace('admin.html');
+      return;
+    }
+    if (d.user?.role === 'professor') {
+      localStorage.setItem('prof_token', d.access_token);
+      localStorage.setItem('prof_user', JSON.stringify(d.user));
+      window.location.replace('profesor.html');
+      return;
+    }
     TOKEN = d.access_token; ME = d.user;
     localStorage.setItem('stu_token', TOKEN);
     localStorage.setItem('stu_user', JSON.stringify(ME));
@@ -817,18 +722,24 @@ async function doRegister() {
   const pw = document.getElementById('r-pw').value;
   const p2 = document.getElementById('r-pw2').value;
   if (!fn||!ln||!em||!pw) return showMsg('Plotëso fushat e detyrueshme','err');
+  if (!dp) return showMsg('Zgjidh drejtimin (departamentin)','err');
   if (pw.length < 8)       return showMsg('Fjalëkalimi duhet min. 8 karaktere','err');
   if (pw !== p2)           return showMsg('Fjalëkalimet nuk përputhen','err');
-  if (!em.includes('@'))   return showMsg('Email i pavlefshëm','err');
+  if (!isStudentEmail(em)) return showMsg('Regjistrohu vetëm me email që përfundon me @universitetiaab.com','err');
 
   setBusy(true,'Duke u regjistruar...');
   try {
-    const r = await fetch(API+'/auth/users',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:em.split('@')[0],email:em,full_name:fn+' '+ln,password:pw,role:'student',department:dp||null})});
+    const r = await fetch(API+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:em.split('@')[0],email:em,full_name:fn+' '+ln,password:pw,department:dp||null,register_as:'student'})});
     const d = await r.json();
-    if (!r.ok) { showMsg(d.detail||'Gabim gjatë regjistrimit','err'); return; }
-    showMsg('✓ Llogaria u krijua! Hyr tani.','ok');
-    switchAuth('login');
-    document.getElementById('l-u').value = em.split('@')[0];
+    if (!r.ok) { showMsg(apiError(d.detail)||'Gabim gjatë regjistrimit','err'); return; }
+    if (d.user?.role !== 'student') {
+      showMsg('Ky portal është vetëm për studentë me @universitetiaab.com','err');
+      return;
+    }
+    TOKEN = d.access_token; ME = d.user;
+    localStorage.setItem('stu_token', TOKEN);
+    localStorage.setItem('stu_user', JSON.stringify(ME));
+    initApp();
   } catch { showMsg('Nuk u lidh me serverin','err'); }
   finally { setBusy(false); }
 }
@@ -836,37 +747,44 @@ async function doRegister() {
 function doLogout() {
   localStorage.removeItem('stu_token'); localStorage.removeItem('stu_user');
   TOKEN=null; ME=null;
-  document.getElementById('app').style.display='none';
-  document.getElementById('auth-page').style.display='block';
+  window.location.replace('ballina.html');
 }
 
 // ══ INIT ══
+const PAGE_LABELS = { home: 'Ballina', submit: 'Ngarko Temën', status: 'Statusi', report: 'Rezultati', profile: 'Profili im' };
+let currentResultThesisId = null;
+let _lastStudentResult = null;
+let statusChart = null;
+
 function initApp() {
   document.getElementById('auth-page').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
+  document.getElementById('app').classList.add('active');
+  document.body.classList.add('app-active');
   const name = ME?.full_name || ME?.username || 'Student';
   const dept = ME?.department || 'Universiteti AAB';
-  document.getElementById('tb-name').textContent    = name;
-  document.getElementById('tb-dept').textContent    = dept;
-  document.getElementById('tb-av').textContent      = name.charAt(0).toUpperCase();
-  document.getElementById('home-name').textContent  = name.split(' ')[0];
-  document.getElementById('home-dept').textContent  = 'Departamenti: ' + dept;
-  // Profile
-  document.getElementById('p-av').textContent       = name.charAt(0).toUpperCase();
-  document.getElementById('p-name').textContent     = name;
-  document.getElementById('p-meta').textContent     = dept + ' · ' + (ME?.email||'');
-  document.getElementById('p-username').textContent = ME?.username||'—';
-  document.getElementById('p-email').textContent    = ME?.email||'—';
-  document.getElementById('p-dept').textContent     = dept;
+  const initials = name.split(' ').filter(Boolean).slice(0, 2).map(x => x[0].toUpperCase()).join('') || 'S';
+  document.getElementById('sb-name').textContent = name;
+  document.getElementById('sb-dept').textContent = dept;
+  document.getElementById('sb-av').textContent = initials;
+  document.getElementById('home-name').textContent = name.split(' ')[0];
+  document.getElementById('home-dept').textContent = dept + ' — ngarko temën dhe ndiq analizën e plagjiaturës.';
+  document.getElementById('p-av').textContent = initials;
+  document.getElementById('p-name').textContent = name;
+  document.getElementById('p-meta').textContent = dept + ' · ' + (ME?.email || '');
+  document.getElementById('p-username').textContent = ME?.username || '—';
+  document.getElementById('p-email').textContent = ME?.email || '—';
+  document.getElementById('p-dept').textContent = dept;
   loadProfessorOptions();
-  loadMyTheses(); loadStats();
+  loadMyTheses();
+  loadStats();
+  setupUploadZone();
 }
 
 async function loadProfessorOptions() {
   const sel = document.getElementById('t-prof');
   if (!sel) return;
   try {
-    const items = await api('/theses/professors-list');
+    const items = await api('/student/professors');
     if (!Array.isArray(items) || !items.length) {
       sel.innerHTML = '<option value="">Nuk ka profesorë aktivë</option>';
       return;
@@ -881,93 +799,1020 @@ async function loadProfessorOptions() {
 
 // ══ NAV ══
 function showPage(n) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-  document.getElementById('page-'+n)?.classList.add('active');
-  document.getElementById('nav-'+n)?.classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+  document.getElementById('page-' + n)?.classList.add('active');
+  document.getElementById('nav-' + n)?.classList.add('active');
+  const bc = document.getElementById('breadcrumb-current');
+  if (bc) bc.textContent = PAGE_LABELS[n] || n;
+  closeSidebar();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar')?.classList.toggle('open');
+  document.getElementById('sidebar-backdrop')?.classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar')?.classList.remove('open');
+  document.getElementById('sidebar-backdrop')?.classList.remove('open');
+}
+function refreshCurrentPage() {
+  const active = document.querySelector('.page.active')?.id?.replace('page-', '') || 'home';
+  if (active === 'home' || active === 'status') { loadMyTheses(); loadStats(); }
+  else if (active === 'submit') loadProfessorOptions();
+  toast('Të dhënat u rifreskuan', 'ok');
 }
 
 // ══ API ══
+function apiError(detail) {
+  if (detail == null) return '';
+  if (typeof detail === 'string') return detail;
+  if (Array.isArray(detail)) return detail.map(x => x.msg || JSON.stringify(x)).join('; ');
+  if (typeof detail === 'object' && detail.msg) return detail.msg;
+  try { return JSON.stringify(detail); } catch { return String(detail); }
+}
 async function api(path,method='GET',body=null,isForm=false) {
   const h={Authorization:'Bearer '+TOKEN};
   if(body&&!isForm) h['Content-Type']='application/json';
   const r=await fetch(API+path,{method,headers:h,body:body?(isForm?body:JSON.stringify(body)):undefined});
   if(r.status===401){doLogout();throw new Error('Sesioni skadoi')}
-  const d=await r.json();
-  if(!r.ok) throw new Error(d.detail||'HTTP '+r.status);
+  const d=await r.json().catch(() => ({}));
+  if(!r.ok) throw new Error(apiError(d.detail)||d.message||('HTTP '+r.status));
   return d;
 }
 
 // ══ STATS ══
 async function loadStats() {
   try {
-    const d = await api('/theses/?limit=100');
-    const items = d.items||[];
-    document.getElementById('hs-themes').textContent   = d.total||0;
-    document.getElementById('hs-analyzed').textContent = items.filter(t=>t.workflow_status && t.workflow_status !== 'in_process').length;
-    const latestFinal = items.find(t => t.workflow_status && t.workflow_status !== 'in_process' && t.review);
-    document.getElementById('hs-score').textContent = latestFinal?.review?.plagiarism_percentage != null
-      ? Math.round(latestFinal.review.plagiarism_percentage) + '%'
-      : '—';
-  } catch{}
+    const d = await api('/student/my-thesis?limit=100');
+    const items = newestThesesFirst(d.items || []);
+    const total = d.total || items.length || 0;
+    const analyzed = items.filter(isThesisResolved).length;
+    const pending = items.filter(isThesisPending).length;
+    document.getElementById('hs-themes').textContent = total;
+    document.getElementById('hs-analyzed').textContent = analyzed;
+    document.getElementById('hs-pending').textContent = pending;
+    const foot = document.getElementById('hs-analyzed-foot');
+    if (foot) foot.textContent = total ? Math.round((analyzed / total) * 100) + '% e totalit' : '0% e totalit';
+    const latest = items.find(t => thesisScore(t) != null) || items[0];
+    const scoreEl = document.getElementById('hs-score');
+    if (scoreEl) {
+      const pct = latest ? thesisScore(latest) : null;
+      scoreEl.textContent = pct != null ? Math.round(Number(pct)) + '%' : '—';
+    }
+    renderHomeChips(total, analyzed, pending, deptLabel());
+    renderStatusChart(items);
+  } catch {}
+}
+
+function deptLabel() { return ME?.department || 'AAB'; }
+
+function newestThesesFirst(items) {
+  return (items || []).slice().sort((a, b) => {
+    const da = a.created_at || a.submission_date || '';
+    const db = b.created_at || b.submission_date || '';
+    if (da !== db) return String(db).localeCompare(String(da));
+    return (Number(b.id) || 0) - (Number(a.id) || 0);
+  });
+}
+
+/** Statusi që studenti e sheh — i njëjti si te tabela "Temat e Mia". */
+function thesisDisplayStatus(t) {
+  if (t.review?.status) return t.review.status;
+  if (t.analysis_status === 'analyzing') return 'analyzing';
+  if (t.analysis_status === 'flagged') return 'flagged';
+  if (t.analysis_status === 'completed') return 'completed';
+  return t.workflow_status || t.status || 'pending';
+}
+
+function isThesisPending(t) {
+  return ['in_process', 'pending', 'analyzing'].includes(thesisDisplayStatus(t));
+}
+
+function isThesisResolved(t) {
+  return ['completed', 'flagged', 'approved', 'rejected', 'needs_revision'].includes(thesisDisplayStatus(t));
+}
+
+function renderHomeChips(total, analyzed, pending, dept) {
+  const el = document.getElementById('home-chips');
+  if (!el) return;
+  el.innerHTML = `
+    <span class="chip-stat accent"><strong>${total}</strong> tema</span>
+    <span class="chip-stat"><strong>${analyzed}</strong> të analizuara</span>
+    <span class="chip-stat"><strong>${pending}</strong> në proces</span>
+    <span class="chip-stat">${dept}</span>`;
+}
+
+function renderStatusChart(items) {
+  const canvas = document.getElementById('chart-stu-status');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  const statusOrder = ['in_process', 'pending', 'analyzing', 'approved', 'completed', 'flagged', 'needs_revision', 'rejected'];
+  const colors = {
+    in_process: '#1565C0',
+    pending: '#78909C',
+    analyzing: '#C9A84C',
+    approved: '#2D7A3A',
+    completed: '#43A047',
+    flagged: '#C63F3F',
+    needs_revision: '#E65100',
+    rejected: '#6B1414',
+  };
+  const counts = Object.fromEntries(statusOrder.map(k => [k, 0]));
+
+  items.forEach(t => {
+    const s = thesisDisplayStatus(t);
+    if (counts[s] !== undefined) counts[s]++;
+    else counts[s] = (counts[s] || 0) + 1;
+  });
+
+  const labels = [];
+  const data = [];
+  const bgColors = [];
+  statusOrder.forEach(k => {
+    if (counts[k] > 0) {
+      labels.push(sl(k));
+      data.push(counts[k]);
+      bgColors.push(colors[k] || '#999');
+    }
+  });
+
+  if (!labels.length) {
+    labels.push('Pa tema');
+    data.push(1);
+    bgColors.push('#E8E8E8');
+  }
+
+  if (statusChart) statusChart.destroy();
+  statusChart = new Chart(canvas, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{ data, backgroundColor: bgColors, borderWidth: 0, hoverOffset: 6 }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '68%',
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 10, padding: 14, font: { family: 'DM Sans', size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label(ctx) {
+              if (labels[0] === 'Pa tema') return 'Nuk ke ngarkuar tema ende';
+              const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+              const pct = total ? Math.round((ctx.raw / total) * 100) : 0;
+              return `${ctx.label}: ${ctx.raw} (${pct}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+// ══ SKEDARI I TEMËS ══
+let _viewerState = { thesisId: null, fileName: null, blobUrl: null };
+
+function escAttr(v) {
+  return String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function reviewStatusLabel(t) {
+  return sl(thesisDisplayStatus(t));
+}
+function reviewStatusBadge(t) {
+  return sb(thesisDisplayStatus(t));
+}
+function thesisScore(t) {
+  if (t?.review?.plagiarism_percentage != null && t.review.plagiarism_percentage !== '') {
+    return Number(t.review.plagiarism_percentage);
+  }
+  if (t?.overall_score != null && t.overall_score !== '') return Number(t.overall_score);
+  return null;
+}
+
+function canViewStudentResult(t) {
+  if (!t) return false;
+  if (t.can_view_result) return true;
+  const wf = t.workflow_status || '';
+  return ['approved', 'rejected', 'needs_revision'].includes(wf);
+}
+
+function formatPlagiarismPct(t) {
+  const pct = thesisScore(t);
+  if (pct == null) return '<span style="color:var(--muted)">—</span>';
+  const n = Math.round(Number(pct));
+  const color = n > 30 ? 'var(--red)' : n > 20 ? 'var(--gold)' : 'var(--green)';
+  return `<span style="font-weight:600;color:${color}">${n}%</span>`;
+}
+function renderStatusTableRow(t) {
+  const r = t.review;
+  const resultBtn = canViewStudentResult(t)
+    ? `<button type="button" class="btn btn-primary" style="padding:4px 10px;font-size:11px;margin-right:4px" onclick="viewStudentResult(${t.id})">Shiko rezultatin</button>`
+    : '';
+  const main = `
+    <tr>
+      <td style="max-width:220px"><div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(t.title)}</div></td>
+      <td style="color:var(--muted)">${escapeHtml(t.assigned_professor || t.student_name || '—')}</td>
+      <td>${t.year || '—'}</td>
+      <td><span class="badge ${reviewStatusBadge(t)}">${reviewStatusLabel(t)}</span></td>
+      <td>${formatPlagiarismPct(t)}</td>
+      <td style="font-size:12px;color:var(--muted)">${t.created_at ? new Date(t.created_at).toLocaleDateString('sq-AL') : '—'}</td>
+      <td><div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center">${resultBtn}${thesisFileActions(t)}</div></td>
+    </tr>`;
+  if (!r || !r.comments) return main;
+  return main + `
+    <tr class="review-comment-row">
+      <td colspan="7">
+        <div class="inline-prof-review">
+          <div class="inline-prof-review-label">Komenti i profesorit</div>
+          <div class="inline-prof-review-text">${escapeHtml(r.comments)}</div>
+        </div>
+      </td>
+    </tr>`;
+}
+
+function closeThesisViewer() {
+  const backdrop = document.getElementById('thesis-viewer-backdrop');
+  if (backdrop) backdrop.classList.remove('open');
+  if (_viewerState.blobUrl) {
+    URL.revokeObjectURL(_viewerState.blobUrl);
+    _viewerState.blobUrl = null;
+  }
+  const frame = document.getElementById('thesis-viewer-frame');
+  if (frame) { frame.removeAttribute('src'); frame.style.display = 'none'; }
+  const pre = document.getElementById('thesis-viewer-text');
+  if (pre) { pre.textContent = ''; pre.style.display = 'none'; }
+  const fallback = document.getElementById('thesis-viewer-fallback');
+  if (fallback) { fallback.innerHTML = ''; fallback.style.display = 'none'; }
+  const loading = document.getElementById('thesis-viewer-loading');
+  if (loading) loading.style.display = 'none';
+  const pane = document.getElementById('thesis-viewer-hl-pane');
+  if (pane) pane.style.display = 'none';
+  const hlList = document.getElementById('thesis-viewer-hl-list');
+  if (hlList) hlList.innerHTML = '';
+}
+
+function downloadCurrentThesis() {
+  if (_viewerState.thesisId) downloadThesisFile(_viewerState.thesisId, _viewerState.fileName);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeThesisViewer();
+});
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-open-thesis');
+  if (!btn) return;
+  openThesisFile(btn.dataset.id, btn.dataset.type, btn.dataset.name, btn.dataset.title);
+});
+
+async function downloadThesisFile(thesisId, fileName) {
+  try {
+    const r = await fetch(API + '/theses/' + thesisId + '/file', {
+      headers: { Authorization: 'Bearer ' + TOKEN },
+    });
+    if (!r.ok) {
+      let detail = 'Skedari nuk u shkarkua';
+      try { detail = (await r.json()).detail || detail; } catch {}
+      throw new Error(detail);
+    }
+    const blob = await r.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName || 'tema';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast('Skedari u shkarkua', 'ok');
+  } catch (e) {
+    toast(e.message || 'Gabim gjatë shkarkimit', 'err');
+  }
+}
+
+async function fillViewerHighlights(thesisId) {
+  const pane = document.getElementById('thesis-viewer-hl-pane');
+  const list = document.getElementById('thesis-viewer-hl-list');
+  if (!pane || !list) return;
+  try {
+    const hl = await api('/analysis/thesis/' + thesisId + '/highlights');
+    const lines = (hl.line_highlights || hl.highlighted_document || []).filter(l => l.match_type);
+    if (!lines.length) {
+      pane.style.display = 'none';
+      return;
+    }
+    pane.style.display = 'flex';
+    list.innerHTML = lines.slice(0, 100).map((l) => {
+      const cls = (typeof MATCH_CLASS !== 'undefined' && MATCH_CLASS[l.match_type]) || 'hl-partial';
+      const sim = Math.round(l.similarity || 0);
+      return `<div class="hl-result-item ${cls}">
+        <div class="hl-result-item-top">
+          <span class="hl-line-num">${l.line_number != null ? l.line_number : ''}</span>
+          ${typeof buildTypeBadge === 'function' ? buildTypeBadge(l.match_type) : ''}
+          <span class="hl-sim-pill ${cls}">${sim}%</span>
+        </div>
+        <div class="hl-result-item-text">${escapeHtml(l.text || l.original_text || l.line || '')}</div>
+      </div>`;
+    }).join('');
+  } catch {
+    pane.style.display = 'none';
+  }
+}
+
+async function openThesisFile(thesisId, fileType, fileName, title, showHighlights) {
+  if (!TOKEN) {
+    toast('Duhet të jesh i kyçur për të hapur temën', 'err');
+    return;
+  }
+
+  closeThesisViewer();
+  const backdrop = document.getElementById('thesis-viewer-backdrop');
+  const loading = document.getElementById('thesis-viewer-loading');
+  backdrop.classList.add('open');
+  loading.style.display = 'flex';
+  document.getElementById('thesis-viewer-title').textContent = title || 'Tema ime';
+  document.getElementById('thesis-viewer-meta').textContent = fileName || '';
+  _viewerState = { thesisId, fileName: fileName || 'tema', blobUrl: null };
+
+  const type = String(fileType || 'pdf').toLowerCase().replace(/^.*\./, '');
+  if (showHighlights) fillViewerHighlights(thesisId);
+
+  try {
+    const r = await fetch(API + '/theses/' + thesisId + '/file?inline=1', {
+      headers: { Authorization: 'Bearer ' + TOKEN },
+    });
+    if (!r.ok) {
+      let detail = 'Skedari nuk u hap';
+      try { detail = (await r.json()).detail || detail; } catch {}
+      throw new Error(detail);
+    }
+
+    loading.style.display = 'none';
+
+    if (type === 'txt') {
+      const text = await r.text();
+      const pre = document.getElementById('thesis-viewer-text');
+      pre.textContent = text || '(Skedari është bosh)';
+      pre.style.display = 'block';
+      return;
+    }
+
+    const mimeMap = {
+      pdf: 'application/pdf',
+      docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    };
+    const headerType = (r.headers.get('content-type') || '').split(';')[0].trim();
+    const mime = headerType && headerType !== 'application/octet-stream'
+      ? headerType
+      : (mimeMap[type] || 'application/octet-stream');
+    const raw = await r.blob();
+    const blob = raw.type && raw.type !== 'application/octet-stream'
+      ? raw
+      : new Blob([raw], { type: mime });
+    const url = URL.createObjectURL(blob);
+    _viewerState.blobUrl = url;
+
+    if (type === 'pdf') {
+      const frame = document.getElementById('thesis-viewer-frame');
+      frame.src = url;
+      frame.style.display = 'block';
+      return;
+    }
+
+    const fallback = document.getElementById('thesis-viewer-fallback');
+    fallback.innerHTML = `
+      <p>Skedari Word (DOCX) nuk shfaqet direkt në shfletues.</p>
+      <button type="button" class="btn btn-primary" onclick="downloadCurrentThesis()">Shkarko dhe hap me Word</button>`;
+    fallback.style.display = 'flex';
+  } catch (e) {
+    closeThesisViewer();
+    toast(e.message || 'Gabim gjatë hapjes së temës', 'err');
+  }
+}
+
+function thesisFileActions(t) {
+  if (!t.file_name && !t.has_file) {
+    return '<span style="font-size:11px;color:var(--muted)">—</span>';
+  }
+  const ft = escAttr(t.file_type || 'pdf');
+  const fn = escAttr(t.file_name || 'tema');
+  const tt = escAttr(t.title || 'Tema');
+  return `
+    <button class="btn btn-ghost btn-open-thesis" style="padding:4px 8px;font-size:11px;margin-right:4px" type="button"
+      data-id="${t.id}" data-type="${ft}" data-name="${fn}" data-title="${tt}">Hap</button>
+    <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px" type="button"
+      onclick="downloadThesisFile(${t.id},'${String(t.file_name || 'tema').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}')">Shkarko</button>`;
+}
+
+async function viewStudentResult(thesisId) {
+  try {
+    const s = await api('/analysis/thesis/' + thesisId + '/status');
+    if (!s.result_id) {
+      toast('Tema nuk është analizuar ende nga profesori', 'info');
+      return;
+    }
+    const [r, thesis] = await Promise.all([
+      api('/analysis/result/' + s.result_id),
+      api('/theses/' + thesisId).catch(() => null),
+    ]);
+    if (r.status !== 'completed') {
+      toast('Analiza nuk është përfunduar ende', 'info');
+      return;
+    }
+    if (thesis) {
+      r.thesis_title = thesis.title || r.thesis_title;
+      if (thesis.review?.comments) {
+        r.professor_comment = thesis.review.comments;
+      }
+    }
+    displayStudentResult(r, thesisId);
+  } catch (e) {
+    toast(e.message || 'Rezultati nuk u ngarkua', 'err');
+  }
+}
+
+const AUTO_PASS_THRESHOLD = 20;
+const MATCH_LABELS = {
+  exact_copy: 'Kopjuar plotësisht',
+  reordered: 'Rend i ndryshuar',
+  partial: 'Pjesërisht e ngjashme',
+  translated: 'Përkthim / parafrazë',
+};
+const MATCH_CLASS = {
+  exact_copy: 'hl-exact',
+  reordered: 'hl-reordered',
+  partial: 'hl-partial',
+  translated: 'hl-translated',
+};
+const MATCH_SHORT = {
+  exact_copy: 'Kopjuar',
+  reordered: 'Rend i ndryshuar',
+  partial: 'E ngjashme',
+  translated: 'Përkthyer',
+};
+
+function scoreColor(pct) {
+  return pct >= 50 ? 'var(--red)' : pct >= 25 ? 'var(--orange)' : 'var(--green)';
+}
+function tokenizeWords(text) {
+  return (text || '').toLowerCase().match(/[\w\u00c0-\u024f]+/g) || [];
+}
+/** Lidhëza / fjalë funksionale — nuk theksohen si plagjiaturë. */
+const FUNCTION_WORDS = new Set([
+  'dhe','edhe','ose','apo','por','se','qe','që','e','i','a','u','o',
+  'ne','në','nga','me','per','për','te','të','së','nje','një','nuk','pa','si','kur','ku',
+  'kjo','ky','keto','këto','ata','ato','ai','ajo','une','unë','ti','ju',
+  'ishte','jane','janë','eshte','është','ka','kane','kanë','do','mund','duhet','më',
+  'pra','sepse','ndersa','ndërsa','keshtu','kështu','atehere','atëherë',
+  'megjithate','megjithatë','gjithashtu','vetem','vetëm','deri','pas','para','mbi','nen','nën',
+  'midis','kunder','kundër','sipas','permes','përmes','rreth','gjate','gjatë','brenda','jashte','jashtë',
+  'tani','sot','pak','shume','shumë','disa','cdo','çdo','tjeter','tjetër','tjetra','gjithe','gjithë',
+  'sa','cila','cili','cilat','cilet','çila','çili','ma','s','tu','ton','jon',
+  'the','a','an','and','or','but','if','then','so','as','of','to','in','on','at','for','with','from','by',
+  'into','is','are','was','were','be','been','being','have','has','had','do','does','did',
+  'will','would','could','should','may','might','must','can','this','that','these','those',
+  'it','its','they','them','their','he','she','his','her','we','our','you','your','my',
+  'not','no','nor','than','too','very','just','also','only','about','over','under','after','before',
+  'between','through','which','who','whom','what','when','where','how','why','there','here',
+  'such','same','other','another','each','every','both','all','any','some','more','most','own'
+]);
+function foldWord(w) {
+  try {
+    return String(w || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  } catch (_) {
+    return String(w || '').toLowerCase();
+  }
+}
+function isFunctionWord(w) {
+  const t = foldWord(w);
+  return !t || t.length <= 1 || FUNCTION_WORDS.has(t) || FUNCTION_WORDS.has(String(w || '').toLowerCase());
+}
+function fragmentsShareContent(a, b) {
+  const wa = tokenizeWords(a).map(foldWord).filter(w => !isFunctionWord(w));
+  const wb = tokenizeWords(b).map(foldWord).filter(w => !isFunctionWord(w));
+  if (wa.length < 4 || wb.length < 4) return false;
+  const sb = new Set(wb);
+  const shared = wa.filter(w => sb.has(w)).length;
+  return shared / Math.min(wa.length, wb.length) >= 0.45;
+}
+function highlightMatchedWords(lineText, sourceText, cls) {
+  if (!sourceText) return escapeHtml(lineText);
+  const src = new Set(tokenizeWords(sourceText).map(foldWord));
+  return String(lineText).split(/([\w\u00c0-\u024f]+)/gi).map(part => {
+    if (!/^[\w\u00c0-\u024f]+$/i.test(part)) return escapeHtml(part);
+    if (isFunctionWord(part)) return escapeHtml(part);
+    if (src.has(foldWord(part))) {
+      return `<mark class="hl-word ${cls || ''}">${escapeHtml(part)}</mark>`;
+    }
+    return escapeHtml(part);
+  }).join('');
+}
+function highlightStats(flagged) {
+  return {
+    exact: flagged.filter(l => l.match_type === 'exact_copy').length,
+    reordered: flagged.filter(l => l.match_type === 'reordered').length,
+    partial: flagged.filter(l => l.match_type === 'partial').length,
+    translated: flagged.filter(l => l.match_type === 'translated').length,
+    total: flagged.length,
+  };
+}
+function buildTypeBadge(matchType) {
+  const cls = MATCH_CLASS[matchType] || 'hl-partial';
+  const label = MATCH_SHORT[matchType] || MATCH_LABELS[matchType] || '';
+  return `<span class="hl-type-badge ${cls}">${label}</span>`;
+}
+function buildHighlightLegend() {
+  return `<div class="hl-legend-row">
+    <span class="hl-legend-pill hl-exact"><span class="hl-dot"></span>Kopjuar</span>
+    <span class="hl-legend-pill hl-reordered"><span class="hl-dot"></span>Rend i ndryshuar</span>
+    <span class="hl-legend-pill hl-partial"><span class="hl-dot"></span>E ngjashme</span>
+    <span class="hl-legend-pill hl-translated"><span class="hl-dot"></span>Përkthyer/parafrazë</span>
+  </div>`;
+}
+function buildStatsBar(stats) {
+  return `<div class="hl-stats-bar">
+    <div class="hl-stat hl-stat-exact"><span class="hl-stat-num">${stats.exact || 0}</span><span class="hl-stat-lbl">Kopjuar</span></div>
+    <div class="hl-stat hl-stat-reordered"><span class="hl-stat-num">${stats.reordered || 0}</span><span class="hl-stat-lbl">Rend i ndryshuar</span></div>
+    <div class="hl-stat hl-stat-partial"><span class="hl-stat-num">${stats.partial || 0}</span><span class="hl-stat-lbl">E ngjashme</span></div>
+    <div class="hl-stat hl-stat-translated"><span class="hl-stat-num">${stats.translated || 0}</span><span class="hl-stat-lbl">Përkthyer</span></div>
+    <div class="hl-stat hl-stat-total"><span class="hl-stat-num">${stats.total || 0}</span><span class="hl-stat-lbl">Gjithsej</span></div>
+  </div>`;
+}
+function buildCompactHighlightItem(line) {
+  const cls = MATCH_CLASS[line.match_type] || 'hl-partial';
+  const sim = Math.round(line.similarity || 0);
+  const secondary = line.is_secondary
+    ? '<span class="hl-type-badge hl-partial" title="Burim shtesë në të njëjtin rresht">+ burim</span>'
+    : '';
+  return `<div class="hl-result-item ${cls}">
+    <div class="hl-result-item-top">
+      <span class="hl-line-num">${line.line_number}</span>
+      ${buildTypeBadge(line.match_type)}
+      ${secondary}
+      <span class="hl-sim-pill ${cls}">${sim}%</span>
+    </div>
+    <div class="hl-result-item-text">${escapeHtml(line.text || '')}</div>
+    ${line.source_text ? `<div class="hl-source-card ${cls}" style="margin:10px 0 0"><div class="hl-source-card-label">Teksti burimor</div><div class="hl-source-card-text">${escapeHtml(line.source_text.slice(0, 300))}${line.source_text.length > 300 ? '…' : ''}</div></div>` : ''}
+  </div>`;
+}
+
+function displayStudentResult(d, thesisId) {
+  currentResultThesisId = thesisId || d.thesis_id || null;
+  _lastStudentResult = d;
+  showPage('report');
+
+  const title = d.thesis_title || d.title || '';
+  const heroSub = document.getElementById('report-hero-sub');
+  if (heroSub) {
+    heroSub.textContent = title
+      ? ('Tema: ' + title)
+      : 'Skori, burimet interne, web dhe rreshtat e theksuar — shiko çfarë duhet përmirësuar.';
+  }
+
+  const cov = d.coverage || d.match_statistics?.coverage || {};
+  const score = Math.round(d.overall_score != null ? d.overall_score : (cov.overall_pct || 0));
+  const internal = Math.round(d.internal_score != null ? d.internal_score : (cov.internal_pct || 0));
+  const web = Math.round(d.web_score != null ? d.web_score : (cov.web_pct || 0));
+  const aiScore = Math.round(Number(d.ai_likelihood_score || 0));
+  const aiDetected = !!(d.ai_detected || aiScore >= 35);
+  const professorApproved = d.workflow_status === 'approved';
+  const riskLevel = (d.risk_level || (score >= 70 ? 'critical' : score >= 50 ? 'high' : score >= 25 ? 'medium' : 'low')).toString().toLowerCase();
+  const riskMap = {
+    critical: { label: 'Rrezik kritik', badge: 'badge b-red', ring: 'danger', color: 'var(--red)', verdict: 'Plagjiaturë kritike (mbulim unik) — rishkruaj rreshtat e theksuar dhe cito burimet.' },
+    high: { label: 'Plagjiaturë e lartë', badge: 'badge b-orange', ring: 'danger', color: 'var(--orange)', verdict: 'Mbulim unik i lartë — përmirëso pjesët e kopjuara para dorëzimit përfundimtar.' },
+    medium: { label: 'Plagjiaturë mesatare', badge: 'badge b-yellow', ring: 'warning', color: 'var(--gold)', verdict: 'Ka përputhje të dyshimta — verifiko burimet dhe riformulo tekstin.' },
+    low: { label: 'Rrezik i ulët', badge: 'badge b-green', ring: 'ok', color: 'var(--green)', verdict: 'Plagjiatura totale është e ulët. Vendimi final jepet nga profesori.' },
+  };
+  const riskInfo = professorApproved
+    ? { label: 'Aprovuar', badge: 'badge b-green', ring: 'ok', color: 'var(--green)', verdict: 'Tema u aprovua nga profesori.' }
+    : (riskMap[riskLevel] || riskMap.low);
+
+  document.getElementById('res-pct').textContent = score + '%';
+  document.getElementById('res-int').textContent = internal + '%';
+  document.getElementById('res-web').textContent = web + '%';
+  const aiEl = document.getElementById('res-ai');
+  if (aiEl) aiEl.textContent = aiDetected ? ('Po · ' + aiScore + '%') : ('Jo · ' + aiScore + '%');
+  const aiNote = document.getElementById('res-ai-note');
+  if (aiNote) {
+    aiNote.textContent = aiDetected
+      ? 'I zbuluar — nuk shtohet në plagjiaturën totale / pragun e aprovimit.'
+      : 'Nuk u zbulua sinjal i fortë AI; gjithsesi nuk hyn në total.';
+  }
+  const intBar = document.getElementById('res-int-bar');
+  const webBar = document.getElementById('res-web-bar');
+  const aiBar = document.getElementById('res-ai-bar');
+  if (intBar) intBar.style.width = Math.min(100, internal) + '%';
+  if (webBar) webBar.style.width = Math.min(100, web) + '%';
+  if (aiBar) aiBar.style.width = Math.min(100, aiScore) + '%';
+  document.getElementById('res-summary').textContent = d.summary || 'Analiza u përfundua. Shiko rreshtat e theksuar dhe burimet më poshtë.';
+
+  const thesisLabel = document.getElementById('res-thesis-label');
+  if (thesisLabel) {
+    thesisLabel.textContent = title
+      ? ('Tema: ' + title)
+      : (currentResultThesisId ? ('Tema #' + currentResultThesisId) : 'Rezultati i detajuar i plagjiaturës');
+  }
+  const verdict = document.getElementById('res-verdict');
+  if (verdict) verdict.textContent = riskInfo.verdict || '';
+
+  const ring = document.getElementById('score-ring');
+  const badge = document.getElementById('res-risk');
+  const hero = document.getElementById('report-hero');
+  if (ring) ring.className = 'score-ring ' + riskInfo.ring;
+  if (hero) hero.className = 'report-hero ' + riskInfo.ring;
+  if (badge) {
+    badge.textContent = riskInfo.label;
+    badge.className = riskInfo.badge;
+    badge.style.color = riskInfo.color;
+  }
+
+  const banner = document.getElementById('res-auto-banner');
+  if (banner) {
+    if (professorApproved) {
+      banner.style.display = 'block';
+      banner.className = 'auto-pass-banner';
+      banner.innerHTML = `<strong>✓ Tema u aprovua nga profesori</strong>Plagjiatura totale ${score}%. Vendimi final është i profesorit.`;
+    } else {
+      banner.style.display = 'none';
+      banner.innerHTML = '';
+    }
+  }
+
+  const commentBox = document.getElementById('stu-prof-comment');
+  if (commentBox) {
+    const note = d.professor_comment || d.recommendations || '';
+    if (note) {
+      commentBox.style.display = '';
+      commentBox.innerHTML = `<div class="inline-prof-review"><div class="inline-prof-review-label">${d.professor_comment ? 'Komenti i profesorit' : 'Rekomandime'}</div><div class="inline-prof-review-text">${escapeHtml(note)}</div></div>`;
+    } else {
+      commentBox.style.display = 'none';
+      commentBox.innerHTML = '';
+    }
+  }
+
+  renderMatchStatistics(d);
+  renderSourceDocuments(d);
+  renderResultHighlights(d);
+  renderAnalysisSources(d);
+
+  const hlBtn = document.getElementById('res-open-highlighted');
+  if (hlBtn) {
+    const hasHl = (d.line_highlights || []).some(l => l.match_type)
+      || (d.highlighted_document || []).some(l => l.match_type);
+    hlBtn.style.display = (currentResultThesisId && hasHl) ? 'block' : 'none';
+  }
+
+  const mainEl = document.querySelector('.main');
+  if (mainEl) mainEl.scrollTop = 0;
+  else window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (currentResultThesisId) refreshStudentHighlights(currentResultThesisId);
+}
+
+async function refreshStudentHighlights(thesisId) {
+  try {
+    const hl = await api('/analysis/thesis/' + thesisId + '/highlights');
+    _lastStudentResult = {
+      ...(_lastStudentResult || {}),
+      line_highlights: hl.line_highlights || [],
+      highlighted_document: hl.highlighted_document || [],
+      source_documents: hl.source_documents || _lastStudentResult?.source_documents || [],
+      web_sources: hl.web_sources || _lastStudentResult?.web_sources || [],
+      match_statistics: hl.match_statistics || {},
+    };
+    renderMatchStatistics(_lastStudentResult);
+    renderSourceDocuments(_lastStudentResult);
+    renderResultHighlights(_lastStudentResult);
+    renderAnalysisSources(_lastStudentResult);
+    const hasHl = (hl.line_highlights || []).some(l => l.match_type)
+      || (hl.highlighted_document || []).some(l => l.match_type);
+    const hlBtn = document.getElementById('res-open-highlighted');
+    if (hlBtn) hlBtn.style.display = hasHl ? 'block' : 'none';
+  } catch (_) { /* ignore */ }
+}
+
+function renderMatchStatistics(d) {
+  const panel = document.getElementById('res-match-stats');
+  if (!panel) return;
+  const ms = d.match_statistics;
+  if (!ms || !ms.matched_lines) {
+    panel.style.display = 'none';
+    panel.innerHTML = '';
+    return;
+  }
+  panel.style.display = 'block';
+  panel.innerHTML = `
+    <div class="turnitin-stats-head">Përmbledhje e ngjashmërisë</div>
+    <div class="turnitin-stats-grid">
+      <div class="tstat"><span class="tstat-num">${ms.matched_words || 0}</span><span class="tstat-lbl">Fjalë të përputhura</span><span class="tstat-sub">${ms.matched_word_pct || 0}% e dokumentit</span></div>
+      <div class="tstat"><span class="tstat-num">${ms.matched_lines || 0}</span><span class="tstat-lbl">Rreshta</span><span class="tstat-sub">${ms.matched_line_pct || 0}% · ${ms.total_lines || 0} gjithsej</span></div>
+      <div class="tstat"><span class="tstat-num">${ms.matched_paragraphs || 0}</span><span class="tstat-lbl">Paragrafë</span><span class="tstat-sub">${ms.total_paragraphs || 0} gjithsej</span></div>
+      <div class="tstat"><span class="tstat-num">${ms.matched_sentences || 0}</span><span class="tstat-lbl">Fjali</span><span class="tstat-sub">${ms.total_sentences || 0} gjithsej</span></div>
+    </div>
+    ${buildHighlightLegend()}`;
+}
+
+function renderSourceDocuments(d) {
+  const panel = document.getElementById('res-source-docs');
+  if (!panel) return;
+  const docs = d.source_documents || [];
+  if (!docs.length) {
+    panel.style.display = 'none';
+    panel.innerHTML = '';
+    return;
+  }
+  panel.style.display = 'block';
+  panel.innerHTML = `
+    <div class="turnitin-sources-head">Dokumentet burimore</div>
+    <div class="turnitin-sources-table-wrap">
+      <table class="turnitin-sources-table">
+        <thead><tr>
+          <th>Burimi</th><th>Ngjashmëria</th><th>Rreshta</th><th>Paragrafë</th><th>Fjalë</th><th></th>
+        </tr></thead>
+        <tbody>${docs.map(doc => {
+          const pct = Math.round(doc.similarity || 0);
+          const title = doc.source_type === 'web' && doc.source_url
+            ? `<a href="${escAttr(doc.source_url)}" target="_blank" rel="noopener">${escapeHtml(doc.source_title)} ↗</a>`
+            : escapeHtml(doc.source_title || 'Burim');
+          const openBtn = doc.source_url
+            ? `<a class="btn btn-ghost btn-xs" href="${escAttr(doc.source_url)}" target="_blank" rel="noopener">Hap</a>`
+            : '';
+          return `<tr>
+            <td>${title}</td>
+            <td><span class="source-pct" style="color:${scoreColor(pct)}">${pct}%</span></td>
+            <td>${doc.line_count || 0}</td>
+            <td>${doc.paragraph_count || 0}</td>
+            <td>${doc.matched_words || 0}</td>
+            <td>${openBtn}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>`;
+}
+
+function renderResultHighlights(d) {
+  const panel = document.getElementById('res-highlight-preview');
+  if (!panel) return;
+  const flagged = (d.line_highlights || []).filter(l => l.match_type);
+  if (!flagged.length) {
+    panel.style.display = 'none';
+    panel.innerHTML = '';
+    return;
+  }
+  const stats = highlightStats(flagged);
+  panel.style.display = 'block';
+  panel.innerHTML = `
+    <div class="hl-result-head">
+      <div>
+        <div class="hl-result-title">Rreshtat e identifikuar</div>
+        <div class="hl-result-sub">${stats.total} rreshta me përputhje — këto duhet t’i përmirësosh</div>
+      </div>
+      ${buildStatsBar(stats)}
+    </div>
+    ${buildHighlightLegend()}
+    <div class="hl-result-list">${flagged.slice(0, 8).map(line => {
+      const cls = MATCH_CLASS[line.match_type] || 'hl-partial';
+      const sim = Math.round(line.similarity || 0);
+      const text = line.text || '';
+      return `<div class="hl-result-item ${cls}">
+        <div class="hl-result-item-top">
+          <span class="hl-line-num">${line.line_number}</span>
+          ${buildTypeBadge(line.match_type)}
+          <span class="hl-sim-pill ${cls}">${sim}%</span>
+        </div>
+        <div class="hl-result-item-text">${escapeHtml(text.slice(0, 240))}${text.length > 240 ? '…' : ''}</div>
+        <div class="hl-result-item-src">${line.source_type === 'web' && line.source_url
+          ? `<a href="${escAttr(line.source_url)}" target="_blank" rel="noopener" class="hl-source-link">${escapeHtml(line.source_title || 'Web')} ↗</a>`
+          : escapeHtml(line.source_title || 'Burim')}</div>
+      </div>`;
+    }).join('')}</div>
+    ${flagged.length > 8 ? `<div class="hl-result-more">+ ${flagged.length - 8} rreshta të tjerë — hap temën për pamje të plotë</div>` : ''}`;
+}
+
+function toggleWebSource(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('open');
+}
+
+function renderAnalysisSources(d) {
+  const container = document.getElementById('res-matches');
+  const aiBanner = document.getElementById('res-ai-banner');
+  if (!container) return;
+
+  const aiScore = Math.round(Number(d.ai_likelihood_score || 0));
+  if (aiBanner) {
+    if (aiScore >= 20) {
+      const aiColor = aiScore >= 55 ? 'var(--red)' : aiScore >= 35 ? 'var(--orange)' : 'var(--gold)';
+      aiBanner.style.display = 'block';
+      aiBanner.className = 'ai-likelihood-banner';
+      aiBanner.innerHTML = `
+        <div class="ai-likelihood-head">
+          <span>Gjasë e tekstit të gjeneruar nga AI</span>
+          <strong style="color:${aiColor}">${aiScore}%</strong>
+        </div>
+        <div class="ai-likelihood-bar"><div class="ai-likelihood-fill" style="width:${aiScore}%;background:${aiColor}"></div></div>
+        <p class="ai-likelihood-note">Vlerësim heuristik — përdore si udhëzim, jo si vendim përfundimtar.</p>`;
+    } else {
+      aiBanner.style.display = 'none';
+      aiBanner.innerHTML = '';
+    }
+  }
+
+  const internal = (d.internal_sources?.length ? d.internal_sources : (d.matches || []))
+    .filter(m => m.source_type === 'internal');
+  const web = (d.web_sources?.length ? d.web_sources : (d.matches || []))
+    .filter(m => m.source_type === 'web');
+  const lineHighlights = (d.line_highlights || []).filter(l => l.match_type);
+
+  if (!internal.length && !web.length && !lineHighlights.length) {
+    container.innerHTML = '<div class="empty"><p>Nuk u gjetën burime të dyshimta.</p></div>';
+    return;
+  }
+
+  let html = '';
+
+  if (lineHighlights.length) {
+    const bySource = {};
+    lineHighlights.forEach(h => {
+      const key = h.source_type === 'web' ? (h.source_url || 'web') : (h.thesis_id || h.source_title || 'internal');
+      if (!bySource[key]) {
+        bySource[key] = {
+          title: h.source_title || 'Burim',
+          url: h.source_url,
+          type: h.source_type,
+          lines: [],
+        };
+      }
+      bySource[key].lines.push(h);
+    });
+    html += `<div class="sources-section"><div class="sources-section-title">Burimet sipas temës / web</div>`;
+    Object.values(bySource).forEach(group => {
+      html += `<div class="source-card ${group.type === 'web' ? 'source-web' : 'source-internal'}">
+        <div class="source-card-head">
+          <div class="source-card-title">${group.type === 'web' && group.url
+            ? `<a href="${escAttr(group.url)}" target="_blank" rel="noopener">${escapeHtml(group.title)} ↗</a>`
+            : escapeHtml(group.title)}</div>
+          <span class="source-card-meta">${group.lines.length} rresht${group.lines.length > 1 ? 'a' : ''}</span>
+        </div>
+        <div class="hl-result-list" style="padding:0">`;
+      group.lines.slice(0, 8).forEach(h => { html += buildCompactHighlightItem(h); });
+      html += `</div></div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (web.length) {
+    html += `<div class="sources-section"><div class="sources-section-title">Burime web — faqet burimore</div>`;
+    web.forEach((m, idx) => {
+      const pct = Math.round(Number(m.similarity_score ?? m.similarity ?? 0));
+      const url = m.source_url || m.source || '';
+      const title = m.source_title || url || 'Burim web';
+      const thesisBit = m.thesis_phrase || m.thesis_excerpt || '';
+      const webBit = m.web_snippet_full || m.matched_text || m.original_text || '';
+      const panelId = `web-src-${idx}`;
+      html += `
+        <div class="source-card source-web">
+          <div class="source-card-head">
+            <div>
+              <div class="source-card-title">${url
+                ? `<a href="${escAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)} ↗</a>`
+                : escapeHtml(title)}</div>
+            </div>
+            <div class="source-card-actions">
+              <span class="source-pct" style="color:${scoreColor(pct)}">${pct}%</span>
+            </div>
+          </div>
+          ${url ? `<a class="source-web-link" href="${escAttr(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>` : ''}
+          <div class="web-source-actions">
+            ${url ? `<button type="button" class="btn btn-ghost btn-xs web-toggle-btn" onclick="toggleWebSource('${panelId}')">Shfaq / fshih tekstin e kopjuar</button>` : ''}
+          </div>
+          <div id="${panelId}" class="web-source-panel open">
+            ${thesisBit ? `<div class="source-fragment-block hl-exact"><span>Në temën tënde:</span>${escapeHtml(thesisBit)}</div>` : ''}
+            ${webBit ? `<div class="source-fragment-block source-from"><span>Në faqen web:</span>${escapeHtml(webBit)}</div>` : ''}
+          </div>
+        </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (internal.length && !lineHighlights.length) {
+    const valid = internal.filter(m => {
+      const pct = Number(m.similarity_score ?? m.similarity ?? 0);
+      const thesisBit = m.thesis_excerpt || '';
+      const sourceBit = m.matched_text || m.original_text || '';
+      return fragmentsShareContent(thesisBit, sourceBit) || pct >= 25;
+    });
+    if (valid.length) {
+    html += `<div class="sources-section"><div class="sources-section-title">Plagjiaturë interne</div>`;
+    valid.slice(0, 15).forEach(m => {
+      const pct = Math.round(Number(m.similarity_score ?? m.similarity ?? 0));
+      const thesisBit = m.thesis_excerpt || '';
+      const sourceBit = m.matched_text || '';
+      html += `<div class="source-card source-internal">
+        <div class="source-card-head">
+          <div class="source-card-title">${escapeHtml(m.source_title || 'Dokument intern')}</div>
+          <span class="source-pct" style="color:${scoreColor(pct)}">${pct}%</span>
+        </div>
+        ${thesisBit ? `<div class="source-fragment-block"><span>Në temën tënde:</span>${escapeHtml(thesisBit)}</div>` : ''}
+        ${sourceBit ? `<div class="source-fragment-block source-from"><span>Në burim:</span>${escapeHtml(sourceBit)}</div>` : ''}
+      </div>`;
+    });
+    html += `</div>`;
+    }
+  }
+
+  container.innerHTML = html || '<div class="empty"><p>Nuk u gjetën burime të dyshimta.</p></div>';
+}
+
+async function openAnalyzedThesisWithHighlights() {
+  if (!currentResultThesisId) return toast('Nuk ka temë të analizuar', 'info');
+  try {
+    const t = await api('/theses/' + currentResultThesisId);
+    await openThesisFile(
+      currentResultThesisId,
+      t.file_type || 'pdf',
+      t.file_name || 'tema',
+      t.title || 'Tema ime',
+      true
+    );
+  } catch (e) {
+    toast(e.message || 'Nuk u hap tema', 'err');
+  }
 }
 
 // ══ TEMAT E MIA ══
 async function loadMyTheses() {
   const tbody = document.getElementById('status-tbody');
   try {
-    const d = await api('/theses/?limit=50');
-    const items = d.items||[];
+    const d = await api('/student/my-thesis?limit=50');
+    const items = newestThesesFirst(d.items||[]);
 
     // Home list
     document.getElementById('home-theses-list').innerHTML = items.length
-      ? items.map(t=>`
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
-            <div style="flex:1;min-width:0">
-              <div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.title}</div>
-              <div style="font-size:11px;color:var(--muted);margin-top:2px">${t.year||'—'} · ${t.assigned_professor||'Pa profesor të caktuar'}</div>
+      ? items.slice(0, 5).map(t=>`
+          <div class="thesis-row">
+            <div class="thesis-row-main">
+              <div class="thesis-row-title">${escapeHtml(t.title)}</div>
+              <div class="thesis-row-meta">${t.year||'—'} · ${escapeHtml(t.assigned_professor||'Pa profesor të caktuar')}</div>
+              ${t.review?.comments ? `<div class="thesis-row-comment">${escapeHtml(t.review.comments)}</div>` : ''}
             </div>
-            <span class="badge ${sb(t.workflow_status||t.status)}">${sl(t.workflow_status||t.status)}</span>
-            ${t.workflow_status && t.workflow_status !== 'in_process' ? '<button class="btn btn-ghost" style="padding:4px 12px;font-size:12px" onclick="loadResult('+t.id+')">Rezultati →</button>' : '<span class="badge b-yellow">Në proces</span>'}
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+              <span class="badge ${reviewStatusBadge(t)}">${reviewStatusLabel(t)}</span>
+              ${canViewStudentResult(t) ? `<button type="button" class="btn btn-primary" style="padding:4px 10px;font-size:11px" onclick="viewStudentResult(${t.id})">Shiko rezultatin</button>` : ''}
+              ${thesisFileActions(t)}
+            </div>
           </div>`).join('')
       : '<div class="empty"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p>Nuk ke ngarkuar asnjë temë ende.</p></div>';
 
     // Status table
     tbody.innerHTML = items.length
-      ? items.map(t=>`
-          <tr>
-            <td style="max-width:220px"><div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.title}</div></td>
-            <td style="color:var(--muted)">${t.assigned_professor||t.student_name||'—'}</td>
-            <td>${t.year||'—'}</td>
-            <td><span class="badge ${sb(t.workflow_status||t.status)}">${sl(t.workflow_status||t.status)}</span></td>
-            <td style="font-size:12px;color:var(--muted)">${t.created_at?new Date(t.created_at).toLocaleDateString('sq'):'—'}</td>
-            <td>${t.workflow_status && t.workflow_status !== 'in_process' ? '<button class="btn btn-ghost" style="padding:4px 12px;font-size:12px" onclick="loadResult('+t.id+')">Rezultati →</button>' : '<span class="badge b-yellow">Në proces</span>'}</td>
-          </tr>`).join('')
-      : '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">Nuk ke ngarkuar asnjë temë ende.</td></tr>';
+      ? items.map(t => renderStatusTableRow(t)).join('')
+      : '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem">Nuk ke ngarkuar asnjë temë ende.</td></tr>';
 
     // Timeline — nëse ka tema
     if (items.length) {
       const latest = items[0];
-      updateTimeline(latest.workflow_status || latest.status);
+      updateTimeline(thesisDisplayStatus(latest), latest.review);
     }
+    renderStatusChart(items);
   } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--red)">Nuk u lidh me backend-in</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--red)">Nuk u lidh me backend-in</td></tr>';
   }
 }
 
-function updateTimeline(status) {
-  const steps = ['pending','analyzing','completed','flagged'];
+function updateTimeline(status, review) {
+  const hasReview = !!(review && review.comments);
   const dones = {
-    in_process: [true,false,false,false],
-    pending:   [true,false,false,false],
-    analyzing: [true,true,false,false],
-    completed: [true,true,true,true],
-    flagged:   [true,true,true,true],
+    in_process: [true, false, false, false],
+    pending: [true, false, false, false],
+    analyzing: [true, true, false, false],
+    completed: [true, true, true, true],
+    flagged: [true, true, true, true],
+    approved: [true, true, true, true],
+    rejected: [true, true, true, true],
+    needs_revision: [true, true, true, true],
   };
-  const d = dones[status]||[false,false,false,false];
-  document.querySelectorAll('.tl-dot').forEach((dot,i)=>{
-    dot.className = 'tl-dot' + (d[i]?(status==='analyzing'&&i===1?' active':' done'):'');
+  const d = hasReview ? [true, true, true, true] : (dones[status] || [false, false, false, false]);
+  document.querySelectorAll('.tl-dot').forEach((dot, i) => {
+    dot.className = 'tl-dot' + (d[i] ? ((status === 'analyzing' && i === 1 && !hasReview) ? ' active' : ' done') : '');
   });
+  const finalTitle = document.querySelector('.tl-item:last-child .tl-title');
+  const finalDesc = document.querySelector('.tl-item:last-child .tl-desc');
+  if (finalTitle && hasReview) {
+    finalTitle.textContent = reviewStatusLabel({ review, workflow_status: status, status });
+    finalDesc.textContent = review.comments.length > 120 ? review.comments.slice(0, 120) + '…' : review.comments;
+  } else if (finalTitle) {
+    finalTitle.textContent = 'Raporti final';
+    finalDesc.textContent = 'Gjenerohet rezultati i plotë';
+  }
 }
 
 // ══ SUBMIT THESIS ══
@@ -991,8 +1836,7 @@ async function submitThesis() {
   form.append('assigned_professor_id', professorId);
 
   try {
-    const up = await api('/theses/upload','POST',form,true);
-    LAST_RESULT_ID = null;
+    const up = await api('/student/submit-thesis','POST',form,true);
     showProg('sub',100,'✓ Tema u dërgua te profesori i zgjedhur');
 
     toast('✓ Tema u dërgua dhe statusi është "In Process".','ok');
@@ -1007,84 +1851,27 @@ async function submitThesis() {
   }
 }
 
-async function loadResult(thesisId) {
-  try {
-    const thesis = await api('/theses/'+thesisId);
-    if ((thesis.workflow_status || thesis.status) === 'in_process') {
-      toast('Tema është ende në proces','info');
-      return;
-    }
-    const review = thesis.review || await api('/theses/'+thesisId+'/review');
-    const analysisStatus = await api('/analysis/thesis/'+thesisId+'/status');
-    let analysis = null;
-    if (analysisStatus.result_id) {
-      analysis = await api('/analysis/result/'+analysisStatus.result_id);
-    }
-    renderResult({ thesis, review, analysis });
-    showPage('result');
-  } catch(e) { toast(e.message,'err'); }
-}
-
-function renderResult(d) {
-  const thesis = d.thesis || d;
-  const review = d.review || thesis.review || null;
-  const analysis = d.analysis || d;
-  const score = Math.round(review?.plagiarism_percentage ?? analysis?.overall_score ?? 0);
-  document.getElementById('result-empty').style.display   = 'none';
-  document.getElementById('result-content').style.display = 'block';
-
-  const big = document.getElementById('r-big');
-  big.textContent = score+'%';
-  big.className   = 'score-big' + (score>=50?' ':score>=25?' warn':' ok');
-
-  document.getElementById('r-final-status').textContent = sl(review?.status || thesis.workflow_status || thesis.status || '—');
-  document.getElementById('r-review-date').textContent = review?.reviewed_at ? new Date(review.reviewed_at).toLocaleDateString('sq') : '—';
-  document.getElementById('r-comments').textContent = review?.comments || '—';
-
-  document.getElementById('r-conf').textContent = Math.round(analysis?.confidential_score||0)+'%';
-  document.getElementById('r-int').textContent  = Math.round(analysis?.internal_score||0)+'%';
-  document.getElementById('r-web').textContent  = Math.round(analysis?.web_score||0)+'%';
-  document.getElementById('r-summary').textContent = review?.comments || analysis?.summary || '—';
-  document.getElementById('r-reco').textContent    = analysis?.recommendations || '—';
-
-  const risk = document.getElementById('r-risk');
-  if      (score>=50){ risk.textContent='⚠ Plagjiaturë e lartë — duhet rishikim';    risk.className='risk-pill risk-critical'; }
-  else if (score>=25){ risk.textContent='⚡ Plagjiaturë mesatare — kontrol i nevojshëm'; risk.className='risk-pill risk-high'; }
-  else               { risk.textContent='✓ Rezultat i mirë — brenda normës';          risk.className='risk-pill risk-low'; }
-
-  const mc = document.getElementById('r-matches');
-  mc.innerHTML='';
-  const matches = analysis?.matches||[];
-  document.getElementById('r-match-count').textContent = matches.length+' ndeshje';
-  if(matches.length){
-    matches.forEach(m=>{
-      const el=document.createElement('div');
-      el.className='match-item';
-      const isConf = m.source_type==='confidential';
-      el.innerHTML=`
-        <div class="match-src">
-          <span>${isConf?'🔒 '+m.source_title:m.source_type==='web'?'🌐 '+(m.source_title||m.source_url||'Web'):'📚 '+m.source_title}</span>
-          <strong style="color:var(--red)">${Math.round(m.similarity_score)}%</strong>
-        </div>
-        <div class="match-txt">${(m.original_text||'').substring(0,200)}${(m.original_text||'').length>200?'...':''}</div>
-        ${isConf?'<div style="margin-top:6px"><span class="conf-tag"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Burim konfidencial — teksti i tij është i mbrojtur</span></div>':''}
-      `;
-      mc.appendChild(el);
-    });
-  } else {
-    mc.innerHTML='<div class="empty"><p>Nuk u gjetën ndeshje të rëndësishme.</p></div>';
-  }
-
-  document.getElementById('hs-score').textContent = score+'%';
-}
-
 // ══ PROFILI ══
 async function changePassword() {
+  const cur = document.getElementById('cp-cur')?.value || '';
   const pw  = document.getElementById('np-pw').value;
   const pw2 = document.getElementById('np-pw2').value;
-  if (pw.length<8)  return toast('Min. 8 karaktere','err');
-  if (pw!==pw2)     return toast('Fjalëkalimet nuk përputhen','err');
-  toast('Funksioni i ndryshimit të fjalëkalimit — lidhet me /api/auth/change-password','info');
+  if (cur.length < 1) return toast('Shkruaj fjalëkalimin aktual', 'err');
+  if (pw.length < 8)  return toast('Min. 8 karaktere', 'err');
+  if (pw !== pw2)     return toast('Fjalëkalimet nuk përputhen', 'err');
+  try {
+    const r = await fetch(API + '/auth/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + TOKEN },
+      body: JSON.stringify({ current_password: cur, new_password: pw }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) { toast(apiError(d.detail) || 'Ndryshimi dështoi', 'err'); return; }
+    document.getElementById('cp-cur').value = '';
+    document.getElementById('np-pw').value = '';
+    document.getElementById('np-pw2').value = '';
+    toast(d.message || 'Fjalëkalimi u ndryshua', 'ok');
+  } catch { toast('Nuk u lidh me serverin', 'err'); }
 }
 
 // ══ FILE SELECT ══
@@ -1096,14 +1883,18 @@ function onFileSelect(input) {
 }
 
 // ══ DRAG & DROP ══
-const uz = document.getElementById('uz');
-uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag')});
-uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
-uz.addEventListener('drop',e=>{
-  e.preventDefault(); uz.classList.remove('drag');
-  const f=e.dataTransfer.files[0];
-  if(f){const dt=new DataTransfer();dt.items.add(f);document.getElementById('tfile').files=dt.files;onFileSelect(document.getElementById('tfile'));}
-});
+function setupUploadZone() {
+  const uz = document.getElementById('uz');
+  if (!uz || uz.dataset.bound) return;
+  uz.dataset.bound = '1';
+  uz.addEventListener('dragover', e => { e.preventDefault(); uz.classList.add('drag'); });
+  uz.addEventListener('dragleave', () => uz.classList.remove('drag'));
+  uz.addEventListener('drop', e => {
+    e.preventDefault(); uz.classList.remove('drag');
+    const f = e.dataTransfer.files[0];
+    if (f) { const dt = new DataTransfer(); dt.items.add(f); document.getElementById('tfile').files = dt.files; onFileSelect(document.getElementById('tfile')); }
+  });
+}
 
 // ══ HELPERS ══
 function showProg(which,pct,txt){
@@ -1123,18 +1914,67 @@ function showMsg(msg,type){
 function clearMsg(){document.getElementById('auth-msg').style.display='none'}
 function setBusy(b,txt){
   const btn=document.getElementById('btn-auth');
-  btn.disabled=b;btn.innerHTML=b?`<div class="spinner" style="margin:0 auto;border-color:rgba(255,255,255,.3);border-top-color:#fff"></div>`:authMode==='login'?'Hyr në Portal':'Regjistrohu';
+  const labels = { login: 'Hyr në Portal', register: 'Regjistrohu', forgot: 'Dërgo email-in' };
+  btn.disabled=b;btn.innerHTML=b?`<div class="spinner" style="margin:0 auto;border-color:rgba(255,255,255,.3);border-top-color:#fff"></div>`:(labels[authMode]||'Vazhdo');
 }
 function sl(s){return{pending:'Në pritje',analyzing:'Duke u analizuar',completed:'Kaloi',flagged:'Flamëruar',in_process:'Në proces',approved:'Aprovuar',rejected:'Refuzuar',needs_revision:'Kërkon rishikim'}[s]||s}
 function sb(s){return{pending:'b-gray',analyzing:'b-yellow',completed:'b-green',flagged:'b-red',in_process:'b-yellow',approved:'b-green',rejected:'b-red',needs_revision:'b-gold'}[s]||'b-gray'}
 
-// ══ AUTO-INIT ══
-if(TOKEN&&ME&&ME.role==='student'){
-  initApp();
-}else if(TOKEN&&ME){
-  // Admin/prof — ridrekcio
-  window.location.href='admin.html';
+function parseStoredUser(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
 }
+
+function bootstrapStudentPortal() {
+  TOKEN = localStorage.getItem('stu_token');
+  ME = parseStoredUser('stu_user');
+  if (TOKEN && ME?.role === 'student') {
+    initApp();
+    return;
+  }
+  if (TOKEN && ME?.role === 'professor') {
+    window.location.replace('profesor.html');
+    return;
+  }
+  if (TOKEN && ME?.role === 'admin') {
+    window.location.replace('admin.html');
+    return;
+  }
+  document.getElementById('auth-page').style.display = 'block';
+}
+
+async function loadDepartmentOptions() {
+  const sel = document.getElementById('r-dp');
+  if (!sel) return;
+  const fallback = [
+    'Programim', 'Programim dhe AI', 'Programim dhe Multimedia',
+    'Programim i Lojërave Kompjuterike', 'Siguri Kibernetike',
+    'Specializim në Inxhinieri Softuerike',
+  ];
+  let depts = fallback;
+  try {
+    const res = await fetch(`${BACKEND_ORIGIN}/api/departments?for=student`);
+    const data = await res.json();
+    if (data.departments?.length) depts = data.departments;
+  } catch (e) { /* fallback */ }
+  sel.innerHTML = '<option value="">— Zgjidh drejtimin —</option>' +
+    depts.map(d => `<option>${d.replace(/</g, '&lt;')}</option>`).join('');
+}
+loadDepartmentOptions();
+
+bootstrapStudentPortal();
 </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function () {});
+      });
+    }
+  </script>
 </body>
 </html>

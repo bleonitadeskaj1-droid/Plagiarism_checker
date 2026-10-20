@@ -9,8 +9,14 @@ def ensure_professor_profile(db: Session, user: User, create_if_missing: bool = 
         return None
 
     profile = db.query(Professor).filter(Professor.user_id == user.id).first()
-    if profile or not create_if_missing:
+    if profile:
+        profile.full_name = user.full_name or user.username
+        if user.department:
+            profile.department = user.department
+        profile.is_active = bool(user.is_active)
         return profile
+    if not create_if_missing:
+        return None
 
     profile = Professor(
         user_id=user.id,
@@ -40,7 +46,6 @@ def ensure_student_profile(db: Session, user: User, create_if_missing: bool = Tr
 
     profile = Student(
         user_id=user.id,
-        university_id=None,
         full_name=user.full_name or user.username,
         student_id=student_code,
         email=user.email,
@@ -57,6 +62,9 @@ def assert_thesis_access(db: Session, thesis: Thesis, current_user: User) -> Non
 
     if current_user.role == UserRole.student:
         if thesis.submitted_by_user_id == current_user.id:
+            return
+        student_profile = ensure_student_profile(db, current_user, create_if_missing=False)
+        if student_profile and thesis.student_id == student_profile.id:
             return
         raise HTTPException(status_code=403, detail="Nuk keni akses në këtë temë")
 
@@ -86,7 +94,11 @@ def can_view_final_review(thesis: Thesis, current_user: User, db: Session) -> bo
         return bool(profile and thesis.assigned_professor_id == profile.id)
 
     if current_user.role == UserRole.student:
-        if thesis.submitted_by_user_id != current_user.id:
+        student_profile = ensure_student_profile(db, current_user, create_if_missing=False)
+        owns_thesis = thesis.submitted_by_user_id == current_user.id
+        if student_profile and thesis.student_id == student_profile.id:
+            owns_thesis = True
+        if not owns_thesis:
             return False
         return thesis.workflow_status != SubmissionWorkflowStatus.in_process
 

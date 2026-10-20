@@ -1,3 +1,11 @@
-from . import theses, analysis, reports, students, topic_requests
+from . import analysis, reports, students, thesis_interactions, theses
+from .plagiarism_router import router as plagiarism_router
 
-__all__ = ["theses", "analysis", "reports", "students", "topic_requests"]
+__all__ = [
+    "analysis",
+    "reports",
+    "students",
+    "thesis_interactions",
+    "theses",
+    "plagiarism_router",
+]

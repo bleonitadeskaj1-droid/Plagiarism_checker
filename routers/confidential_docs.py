@@ -48,9 +48,13 @@ async def upload_confidential(
     with open(tmp_path, "wb") as buf:
         shutil.copyfileobj(file.file, buf)
 
-    plain_text = extract_text(tmp_path, ext)
-    os.remove(tmp_path)
+    try:
+        plain_text = extract_text(tmp_path, ext)
+    except Exception as exc:
+        os.remove(tmp_path)
+        raise HTTPException(status_code=400, detail=f"Ekstraktimi i tekstit dështoi: {str(exc)}")
 
+    os.remove(tmp_path)
     if not plain_text or len(plain_text.strip()) < 100:
         raise HTTPException(status_code=400, detail="Dokumenti është bosh ose shumë i shkurtër")
 

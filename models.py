@@ -71,26 +71,15 @@ class ConfidentialDocument(Base):
                                      foreign_keys="PlagiarismMatch.conf_source_id")
 
 
-class University(Base):
-    __tablename__ = "universities"
-    id         = Column(Integer, primary_key=True, index=True)
-    name       = Column(String(255), nullable=False)
-    created_at = Column(TIMESTAMP, server_default=func.now())
-    students   = relationship("Student", back_populates="university")
-
-
 class Student(Base):
     __tablename__ = "students"
     id            = Column(Integer, primary_key=True, index=True)
     user_id       = Column(Integer, ForeignKey("users.id"), nullable=True, unique=True)
-    university_id = Column(Integer, ForeignKey("universities.id"))
     full_name     = Column(String(255), nullable=False)
     student_id    = Column(String(50), unique=True, nullable=False)
     email         = Column(String(255))
     created_at    = Column(TIMESTAMP, server_default=func.now())
-    university    = relationship("University", back_populates="students")
     theses        = relationship("Thesis", back_populates="student")
-    topic_requests = relationship("TopicRequest", back_populates="student")
 
 
 class Thesis(Base):
@@ -109,6 +98,7 @@ class Thesis(Base):
     supervisor = Column(String(255))
     workflow_status = Column(Enum(SubmissionWorkflowStatus), default=SubmissionWorkflowStatus.in_process, nullable=False)
     status     = Column(Enum(ThesisStatus), default=ThesisStatus.pending)
+    is_archive = Column(Boolean, default=False, nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
     student    = relationship("Student", back_populates="theses")
@@ -118,10 +108,6 @@ class Thesis(Base):
     reviews = relationship("Review", back_populates="thesis", cascade="all, delete-orphan")
     results    = relationship("PlagiarismResult", back_populates="thesis")
     notifications = relationship("Notification", back_populates="thesis")
-    messages = relationship("ThesisMessage", back_populates="thesis", cascade="all, delete-orphan")
-    feedback_items = relationship("ThesisFeedback", back_populates="thesis", cascade="all, delete-orphan")
-    evaluation = relationship("ThesisEvaluation", back_populates="thesis", uselist=False, cascade="all, delete-orphan")
-    topic_requests = relationship("TopicRequest", back_populates="thesis")
 
 
 class Professor(Base):
@@ -136,9 +122,6 @@ class Professor(Base):
     user = relationship("User", back_populates="professor_profile")
     assigned_theses = relationship("Thesis", back_populates="assigned_professor")
     notifications = relationship("Notification", back_populates="recipient_professor")
-    feedback_items = relationship("ThesisFeedback", back_populates="professor")
-    evaluations = relationship("ThesisEvaluation", back_populates="professor")
-    topic_requests = relationship("TopicRequest", back_populates="professor")
 
 
 class UploadedFile(Base):
@@ -168,21 +151,6 @@ class Review(Base):
     professor = relationship("Professor")
 
 
-class TopicRequest(Base):
-    __tablename__ = "topic_requests"
-    id            = Column(Integer, primary_key=True, index=True)
-    student_id    = Column(Integer, ForeignKey("students.id"), nullable=False)
-    professor_id  = Column(Integer, ForeignKey("professors.id"), nullable=False)
-    thesis_id     = Column(Integer, ForeignKey("theses.id"), nullable=False)
-    note          = Column(Text)
-    status        = Column(Enum("pending", "approved", "rejected"), default="pending")
-    requested_at  = Column(TIMESTAMP, server_default=func.now())
-
-    student   = relationship("Student", back_populates="topic_requests")
-    professor = relationship("Professor", back_populates="topic_requests")
-    thesis    = relationship("Thesis", back_populates="topic_requests")
-
-
 class Notification(Base):
     __tablename__ = "notifications"
     id                     = Column(Integer, primary_key=True, index=True)
@@ -197,43 +165,6 @@ class Notification(Base):
     thesis = relationship("Thesis", back_populates="notifications")
 
 
-class ThesisMessage(Base):
-    __tablename__ = "thesis_messages"
-    id             = Column(Integer, primary_key=True, index=True)
-    thesis_id      = Column(Integer, ForeignKey("theses.id"), nullable=False)
-    sender_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    message_text   = Column(Text, nullable=False)
-    created_at     = Column(TIMESTAMP, server_default=func.now())
-
-    thesis = relationship("Thesis", back_populates="messages")
-
-
-class ThesisFeedback(Base):
-    __tablename__ = "thesis_feedback"
-    id              = Column(Integer, primary_key=True, index=True)
-    thesis_id       = Column(Integer, ForeignKey("theses.id"), nullable=False)
-    professor_id    = Column(Integer, ForeignKey("professors.id"), nullable=False)
-    feedback_text   = Column(Text, nullable=False)
-    created_at      = Column(TIMESTAMP, server_default=func.now())
-
-    thesis = relationship("Thesis", back_populates="feedback_items")
-    professor = relationship("Professor", back_populates="feedback_items")
-
-
-class ThesisEvaluation(Base):
-    __tablename__ = "thesis_evaluations"
-    id               = Column(Integer, primary_key=True, index=True)
-    thesis_id        = Column(Integer, ForeignKey("theses.id"), nullable=False, unique=True)
-    professor_id     = Column(Integer, ForeignKey("professors.id"), nullable=False)
-    grade            = Column(String(20), nullable=False)
-    evaluation_text  = Column(Text, nullable=False)
-    created_at       = Column(TIMESTAMP, server_default=func.now())
-    updated_at       = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
-
-    thesis = relationship("Thesis", back_populates="evaluation")
-    professor = relationship("Professor", back_populates="evaluations")
-
-
 class PlagiarismResult(Base):
     __tablename__ = "plagiarism_results"
     id                  = Column(Integer, primary_key=True, index=True)
@@ -243,6 +174,7 @@ class PlagiarismResult(Base):
     confidential_score  = Column(DECIMAL(5,2), default=0.00)
     web_score           = Column(DECIMAL(5,2), default=0.00)
     ai_analysis         = Column(Text)
+    risk_level          = Column(String(20))
     status              = Column(Enum("pending","completed","error"), default="pending")
     analyzed_at         = Column(TIMESTAMP, server_default=func.now())
     thesis              = relationship("Thesis", back_populates="results")
@@ -277,3 +209,33 @@ class SystemSetting(Base):
     __table_args__ = (
         UniqueConstraint("group_name", "setting_key", name="uq_system_settings_group_key"),
     )
+
+
+class PasswordResetToken(Base):
+    __tablename__ = "password_reset_tokens"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    token_hash = Column(String(64), nullable=False, unique=True, index=True)
+    expires_at = Column(TIMESTAMP, nullable=False)
+    used_at = Column(TIMESTAMP, nullable=True)
+    created_at = Column(TIMESTAMP, server_default=func.now())
+    user = relationship("User")
+
+
+class AuditLog(Base):
+    """Immutable-ish audit trail for admin/professor actions."""
+    __tablename__ = "audit_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    username = Column(String(100))
+    role = Column(String(50), index=True)
+    action = Column(String(100), nullable=False, index=True)
+    resource_type = Column(String(100))
+    resource_id = Column(String(64))
+    method = Column(String(10))
+    path = Column(String(500))
+    status_code = Column(Integer)
+    ip_address = Column(String(64))
+    details = Column(Text)
+    created_at = Column(TIMESTAMP, server_default=func.now(), index=True)
+    user = relationship("User")

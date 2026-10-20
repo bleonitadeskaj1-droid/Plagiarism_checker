@@ -7,9 +7,9 @@ from sqlalchemy.orm import Session
 from auth import require_admin
 from database import get_db
 from models import SystemSetting, User
+from services.admin_settings_service import SETTINGS_GROUP, get_admin_settings
 
 router = APIRouter()
-SETTINGS_GROUP = "admin_panel"
 
 
 class SettingsPayload(BaseModel):
@@ -21,10 +21,7 @@ def get_settings(
     db: Session = Depends(get_db),
     _: User = Depends(require_admin),
 ):
-    rows = db.query(SystemSetting).filter(SystemSetting.group_name == SETTINGS_GROUP).all()
-    return {
-        "settings": {row.setting_key: row.setting_value for row in rows}
-    }
+    return {"settings": get_admin_settings(db)}
 
 
 @router.post("/settings")
@@ -49,4 +46,4 @@ def save_settings(
             row.setting_value = str(value)
 
     db.commit()
-    return {"message": "Cilësimet u ruajtën", "saved": len(payload.settings)}
+    return {"message": "Cilësimet u ruajtën", "saved": len(payload.settings), "settings": get_admin_settings(db)}

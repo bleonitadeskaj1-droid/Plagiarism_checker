@@ -1,0 +1,25 @@
+{
+  "name": "AAB Plagjiaturë",
+  "short_name": "AAB Check",
+  "description": "Sistemi i analizës së plagjiaturës — Universiteti AAB",
+  "start_url": "/ballina.html",
+  "display": "standalone",
+  "background_color": "#FDF8F3",
+  "theme_color": "#C63F3F",
+  "orientation": "portrait-primary",
+  "lang": "sq",
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

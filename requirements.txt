@@ -1,16 +1,74 @@
-fastapi>=0.95.0
-uvicorn[standard]>=0.22.0
-SQLAlchemy>=1.4
-pydantic>=1.10
-python-dotenv>=1.0
-scikit-learn>=1.3
-nltk>=3.8
-numpy>=1.24
-PyPDF2>=3.0
-docx2txt>=0.8
-requests>=2.0
+# =============================================================================
+# Sistemi i Plagjiaturës — Dependencies (Python 3.10+)
+# Instalim: pip install -r requirements.txt
+# =============================================================================
+
+# --- Web API & Server ---
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
 python-multipart>=0.0.9
+flask>=3.0.0
+
+# --- Database ---
+sqlalchemy>=2.0.0
+alembic>=1.13.0
 PyMySQL>=1.1.0
+
+# --- Auth & Security ---
 PyJWT>=2.8.0
 bcrypt>=4.2.0
 cryptography>=42.0.0
+python-dotenv>=1.0.0
+pydantic-settings>=2.0.0
+
+# --- Scientific / ML Core ---
+numpy>=1.24.0
+scipy>=1.11.0
+scikit-learn>=1.3.0
+pandas>=2.1.0
+
+# --- Deep Learning & NLP (plagiarism detection) ---
+torch>=2.1.0
+transformers>=4.40.0
+sentence-transformers>=3.0.0
+faiss-cpu>=1.8.0
+nltk>=3.8.0
+langdetect>=1.0.9
+rapidfuzz>=3.6.0
+
+# --- LangChain (AI agent / v1 API) ---
+langchain>=0.2.0
+langchain-community>=0.2.0
+
+# --- Text Extraction (PDF, DOCX, PPTX, XLSX) ---
+pymupdf>=1.24.0
+pypdf>=4.0.0
+PyPDF2>=3.0.0
+pdfplumber>=0.11.0
+python-docx>=1.1.0
+docx2txt>=0.8
+python-pptx>=1.0.0
+openpyxl>=3.1.0
+
+# --- Web Search & Content Extraction ---
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+trafilatura>=1.8.0
+lxml>=5.0.0
+duckduckgo-search>=6.2.0
+ddgs>=9.0.0
+
+# --- Near-duplicate Detection ---
+datasketch>=1.6.0
+
+# --- Cloud storage (optional S3 / MinIO) ---
+boto3>=1.34.0
+
+# --- PDF Reports & Visualization ---
+reportlab>=4.0.0
+matplotlib>=3.8.0
+seaborn>=0.13.0
+
+# --- Dev & Testing ---
+pytest>=8.0.0
+httpx>=0.27.0

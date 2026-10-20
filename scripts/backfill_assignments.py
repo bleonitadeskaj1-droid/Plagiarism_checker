@@ -33,31 +33,16 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from database import Base, SessionLocal, engine
+from database import ensure_schema_extensions, SessionLocal, engine
 from models import Professor, Student, Thesis, User, UserRole
 
 
-def ensure_schema_extensions() -> None:
+def ensure_schema_extensions_for_backfill() -> None:
+    import models  # noqa: F401
+    from database import Base
+
     Base.metadata.create_all(bind=engine)
-
-    inspector = inspect(engine)
-    dialect = engine.dialect.name
-
-    with engine.begin() as connection:
-        if "theses" in inspector.get_table_names():
-            thesis_columns = {column["name"] for column in inspector.get_columns("theses")}
-            if "submitted_by_user_id" not in thesis_columns:
-                col_type = "INTEGER" if dialect == "sqlite" else "INT"
-                connection.execute(text(f"ALTER TABLE theses ADD COLUMN submitted_by_user_id {col_type} NULL"))
-            if "assigned_professor_id" not in thesis_columns:
-                col_type = "INTEGER" if dialect == "sqlite" else "INT"
-                connection.execute(text(f"ALTER TABLE theses ADD COLUMN assigned_professor_id {col_type} NULL"))
-
-        if "students" in inspector.get_table_names():
-            student_columns = {column["name"] for column in inspector.get_columns("students")}
-            if "user_id" not in student_columns:
-                col_type = "INTEGER" if dialect == "sqlite" else "INT"
-                connection.execute(text(f"ALTER TABLE students ADD COLUMN user_id {col_type} NULL"))
+    ensure_schema_extensions_for_backfill()
 
 
 @dataclass
@@ -170,7 +155,6 @@ def ensure_student_profiles(db) -> dict[int, Student]:
         if not profile:
             profile = Student(
                 user_id=user.id,
-                university_id=None,
                 full_name=user.full_name or user.username,
                 student_id=make_student_id(user),
                 email=user.email,
@@ -369,7 +353,7 @@ def validate_integrity(db) -> dict[str, int]:
 
 
 def backfill(dry_run: bool = False) -> dict:
-    ensure_schema_extensions()
+    ensure_schema_extensions_for_backfill()
     db = SessionLocal()
     try:
         professor_profiles = ensure_professor_profiles(db)

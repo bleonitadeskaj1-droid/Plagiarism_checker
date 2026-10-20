@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Data & logs
+data/
+logs/
+*.db
+*.sqlite3
+uploads/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Models cache
+.cache/
+models/
+
+# Logs
+*.log
+*.log.err
+
+# Local thesis-formatting scratch, not part of the app
+scripts/_*
+scripts/thesis_figures/
+scripts/fill_bachelor_thesis.py
+scripts/fill_empty_bachelor.py
+scripts/fix_finale.py
+scripts/fix_lists_toc.py
+scripts/format_like_dren.py
+scripts/format_thesis_final.py
+scripts/to_pdf.ps1
+scripts/update_fields.ps1

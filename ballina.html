@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#C63F3F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="AAB Check">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/static/icons/icon-192.svg" type="image/svg+xml">
   <title>Universiteti AAB — Sistemi i Analizës së Plagjiaturës</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -138,6 +144,14 @@
     }
     .hero-title em { font-style: italic; color: var(--gold2); }
     .hero-title .line2 { font-weight: 600; display: block; }
+    .hero-title .brand-red {
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .hero-title .brand-black {
+      color: #0A0A0A;
+      font-weight: 600;
+    }
 
     .hero-sub {
       font-size: 16px; font-weight: 300;
@@ -375,7 +389,7 @@
       background: rgba(255,255,255,.08); border-radius: 8px; padding: 4px; margin-bottom: 20px;
     }
     .tab-btn {
-      flex: 1; padding: 9px; font-family: var(--ff-body); font-size: 13px; font-weight: 500;
+      flex: 1; padding: 9px 6px; font-family: var(--ff-body); font-size: 12px; font-weight: 500;
       color: rgba(255,255,255,.45); background: transparent; border: none; border-radius: 6px;
       cursor: pointer; transition: .2s; letter-spacing: .03em;
     }
@@ -476,18 +490,20 @@
   <div class="hero-content">
     <div class="hero-eyebrow">Universiteti AAB — Prishtinë</div>
     <h1 class="hero-title">
-      Integriteti
-      <em>Akademik</em>
-      <span class="line2">i Garantuar.</span>
+      <span class="brand-red">AAB</span>
+      <span class="brand-black">THESIS</span><span class="brand-red">GUARD</span>
     </h1>
     <p class="hero-sub">
       Platforma e avancuar e analizës së plagjiaturës për temat e diplomës —
       e ndërtuar mbi inteligjencën artificiale, e mbrojtur me enkriptim, e besuar nga akademia.
     </p>
     <div class="hero-actions">
-      <button class="btn-hero-primary" onclick="openModal(event,'register')">
+      <button class="btn-hero-primary" onclick="openModal(event,'register-student')">
         <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-        Regjistrohu Tani
+        Regjistrohu si Student
+      </button>
+      <button class="btn-hero-ghost" onclick="openModal(event,'register-professor')">
+        Regjistrohu si Profesor
       </button>
       <button class="btn-hero-ghost" onclick="openModal(event,'login')">
         Hyr në Llogari →
@@ -495,11 +511,7 @@
     </div>
   </div>
 
-  <div class="hero-stats">
-    <div class="stat-badge"><div class="num">98%</div><div class="lbl">Saktësi Zbulimi</div></div>
-    <div class="stat-badge"><div class="num">2.4k+</div><div class="lbl">Tema të Analizuara</div></div>
-    <div class="stat-badge"><div class="num">AES‑256</div><div class="lbl">Enkriptim</div></div>
-  </div>
+ 
 
   <div class="scroll-hint">
     <span>Rrjedh</span>
@@ -612,10 +624,11 @@
   <h2>Integritet akademik<br>fillon me <em>një klik</em></h2>
   <p>Bashkohu me Universitetin AAB në platformën e analizës së plagjiaturës. I sigurt, i shpejtë, i besueshëm.</p>
   <div class="cta-buttons">
-    <button class="btn-hero-primary" onclick="openModal(event,'register')">
+    <button class="btn-hero-primary" onclick="openModal(event,'register-student')">
       <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-      Regjistrohu Falas
+      Regjistrohu si Student
     </button>
+    <button class="btn-hero-ghost" onclick="openModal(event,'register-professor')">Regjistrohu si Profesor</button>
     <button class="btn-hero-ghost" onclick="openModal(event,'login')">Hyr në Sistem →</button>
   </div>
 </section>
@@ -628,7 +641,6 @@
       <li><a href="#">Privatësia</a></li>
       <li><a href="#">Kushtet</a></li>
       <li><a href="#">Kontakt</a></li>
-      <li><a href="admin.html">Admin Panel</a></li>
     </ul>
   </div>
   <div class="footer-copy">© 2024 Universiteti AAB, Prishtinë. Të gjitha të drejtat e rezervuara.</div>
@@ -643,8 +655,9 @@
         <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
       <div class="modal-tabs">
-        <button class="tab-btn active" id="tab-login"    onclick="switchTab('login')">Hyr</button>
-        <button class="tab-btn"        id="tab-register" onclick="switchTab('register')">Regjistrohu</button>
+        <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Hyr</button>
+        <button class="tab-btn" id="tab-register-student" onclick="switchTab('register-student')">Si Student</button>
+        <button class="tab-btn" id="tab-register-professor" onclick="switchTab('register-professor')">Si Profesor</button>
       </div>
       <div class="modal-title" id="modal-title">Mirë se <strong>erdhe</strong></div>
       <div class="modal-sub"  id="modal-sub">Hyr në llogarinë tënde</div>
@@ -655,41 +668,71 @@
       <div id="form-login">
         <div class="form-group">
           <label>Emri i Përdoruesit ose Email</label>
-          <input type="text" id="l-username" placeholder="p.sh. arta.krasniqi ose prof.demo@aab.edu.al" autocomplete="username">
+          <input type="text" id="l-username" placeholder="p.sh. arta.krasniqi@universitetiaab.com" autocomplete="username">
         </div>
         <div class="form-group">
           <label>Fjalëkalimi</label>
           <input type="password" id="l-password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
         </div>
+        <div style="text-align:right;margin:-8px 0 12px">
+          <a href="#" onclick="switchTab('forgot-password');return false" style="font-size:13px;color:#C63F3F;text-decoration:none">Keni harruar fjalëkalimin?</a>
+        </div>
         <div id="login-msg" style="font-size:13px;margin-bottom:12px;display:none"></div>
         <button class="btn-modal-primary" onclick="doLogin()">Hyr në Sistem</button>
-        <div class="modal-note">Nuk ke llogari? <a href="#" onclick="switchTab('register');return false">Regjistrohu këtu</a></div>
+        <div class="modal-note">Nuk ke llogari?
+          <a href="#" onclick="switchTab('register-student');return false">Regjistrohu si student</a> ·
+          <a href="#" onclick="switchTab('register-professor');return false">si profesor</a>
+        </div>
       </div>
 
-      <!-- REGISTER -->
-      <div id="form-register" style="display:none">
-        <div class="form-row-2">
-          <div class="form-group"><label>Emri</label><input type="text" id="r-fname" placeholder="Arta"></div>
-          <div class="form-group"><label>Mbiemri</label><input type="text" id="r-lname" placeholder="Krasniqi"></div>
-        </div>
-        <div class="form-group"><label>Email Universitar</label><input type="email" id="r-email" placeholder="arta.krasniqi@aab.edu.al"></div>
-        <div class="form-group"><label>Numri Indeksit</label><input type="text" id="r-index" placeholder="2024/CS/0001"></div>
+      <!-- FORGOT PASSWORD -->
+      <div id="form-forgot-password" style="display:none">
         <div class="form-group">
-          <label>Departamenti</label>
-          <select id="r-dept">
-            <option value="">— Zgjidh departamentin —</option>
-            <option>Programim</option>
-            <option>Programim dhe AI</option>
-            <option>Programim dhe Multimedia</option>
-            <option>Programim i Lojerave Kompjuterike</option>
-            <option>Siguri Kibernetike</option>
-            <option>Specializim ne Inxhinieri Softuerike</option>
+          <label>Email i llogarisë</label>
+          <input type="email" id="fp-email" placeholder="emri.mbiemri@universitetiaab.com" autocomplete="email" onkeydown="if(event.key==='Enter')doForgotPassword()">
+        </div>
+        <div id="forgot-msg" style="font-size:13px;margin-bottom:12px;display:none"></div>
+        <button class="btn-modal-primary" type="button" onclick="doForgotPassword()">Dërgo lidhjen e rivendosjes</button>
+        <div class="modal-note"><a href="#" onclick="switchTab('login');return false">← Kthehu te hyrja</a></div>
+      </div>
+
+      <!-- REGISTER STUDENT -->
+      <div id="form-register-student" style="display:none">
+        <div class="form-row-2">
+          <div class="form-group"><label>Emri</label><input type="text" id="rs-fname" placeholder="Arta"></div>
+          <div class="form-group"><label>Mbiemri</label><input type="text" id="rs-lname" placeholder="Krasniqi"></div>
+        </div>
+        <div class="form-group"><label>Email Universitar *</label><input type="email" id="rs-email" placeholder="emri.mbiemri@universitetiaab.com"></div>
+        <div class="form-group"><label>Numri Indeksit</label><input type="text" id="rs-index" placeholder="2024/CS/0001"></div>
+        <div class="form-group">
+          <label>Drejtimi / Specializimi *</label>
+          <select id="rs-dept">
+            <option value="">— Zgjidh drejtimin —</option>
           </select>
         </div>
-        <div class="form-group"><label>Fjalëkalimi</label><input type="password" id="r-pass" placeholder="Min. 8 karaktere"></div>
-        <div id="reg-msg" style="font-size:13px;margin-bottom:12px;display:none"></div>
-        <button class="btn-modal-primary" onclick="doRegister()">Krijo Llogarinë</button>
-        <div class="modal-note">Duke u regjistruar pranon <a href="#">Kushtet e Përdorimit</a>.<br>Ke llogari? <a href="#" onclick="switchTab('login');return false">Hyr këtu</a></div>
+        <div class="form-group"><label>Fjalëkalimi *</label><input type="password" id="rs-pass" placeholder="Min. 8 karaktere"></div>
+        <div id="reg-stu-msg" style="font-size:13px;margin-bottom:12px;display:none"></div>
+        <button class="btn-modal-primary" onclick="doRegisterStudent()">Krijo Llogarinë e Studentit</button>
+        <div class="modal-note">Vetëm me email <strong>@universitetiaab.com</strong>.<br>Je profesor? <a href="#" onclick="switchTab('register-professor');return false">Regjistrohu këtu</a></div>
+      </div>
+
+      <!-- REGISTER PROFESSOR -->
+      <div id="form-register-professor" style="display:none">
+        <div class="form-row-2">
+          <div class="form-group"><label>Emri</label><input type="text" id="rp-fname" placeholder="Artan"></div>
+          <div class="form-group"><label>Mbiemri</label><input type="text" id="rp-lname" placeholder="Berisha"></div>
+        </div>
+        <div class="form-group"><label>Email Institucional *</label><input type="email" id="rp-email" placeholder="emri@aab-edu.net"></div>
+        <div class="form-group">
+          <label>Departamenti *</label>
+          <select id="rp-dept">
+            <option value="">— Zgjidh departamentin —</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Fjalëkalimi *</label><input type="password" id="rp-pass" placeholder="Min. 8 karaktere"></div>
+        <div id="reg-prof-msg" style="font-size:13px;margin-bottom:12px;display:none"></div>
+        <button class="btn-modal-primary" onclick="doRegisterProfessor()">Krijo Llogarinë e Profesorit</button>
+        <div class="modal-note">Vetëm me email institucional me domain <strong>@aab-edu.net</strong>.<br>Ke llogari? <a href="#" onclick="switchTab('login');return false">Hyr këtu</a></div>
       </div>
 
     </div>
@@ -711,13 +754,95 @@
   document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
 
   function switchTab(tab) {
-    const isLogin = tab==='login';
-    document.getElementById('tab-login').classList.toggle('active', isLogin);
-    document.getElementById('tab-register').classList.toggle('active', !isLogin);
-    document.getElementById('form-login').style.display    = isLogin ? '' : 'none';
-    document.getElementById('form-register').style.display = isLogin ? 'none' : '';
-    document.getElementById('modal-title').innerHTML = isLogin ? 'Mirë se <strong>erdhe</strong>' : 'Krijo <strong>llogarinë</strong>';
-    document.getElementById('modal-sub').textContent  = isLogin ? 'Hyr në llogarinë tënde' : 'Regjistrohu në platformën AAB';
+    const isLogin = tab === 'login';
+    const isStudent = tab === 'register-student';
+    const isProfessor = tab === 'register-professor';
+    const isForgot = tab === 'forgot-password';
+    document.getElementById('tab-login').classList.toggle('active', isLogin || isForgot);
+    document.getElementById('tab-register-student').classList.toggle('active', isStudent);
+    document.getElementById('tab-register-professor').classList.toggle('active', isProfessor);
+    document.getElementById('form-login').style.display = isLogin ? '' : 'none';
+    document.getElementById('form-forgot-password').style.display = isForgot ? '' : 'none';
+    document.getElementById('form-register-student').style.display = isStudent ? '' : 'none';
+    document.getElementById('form-register-professor').style.display = isProfessor ? '' : 'none';
+    if (isLogin) {
+      document.getElementById('modal-title').innerHTML = 'Mirë se <strong>erdhe</strong>';
+      document.getElementById('modal-sub').textContent = 'Hyr në llogarinë tënde';
+    } else if (isForgot) {
+      document.getElementById('modal-title').innerHTML = 'Rivendos <strong>fjalëkalimin</strong>';
+      document.getElementById('modal-sub').textContent = 'Do të merrni një email me lidhje të sigurt';
+    } else if (isStudent) {
+      document.getElementById('modal-title').innerHTML = 'Regjistrohu si <strong>Student</strong>';
+      document.getElementById('modal-sub').textContent = 'Vetëm me email @universitetiaab.com';
+    } else {
+      document.getElementById('modal-title').innerHTML = 'Regjistrohu si <strong>Profesor</strong>';
+      document.getElementById('modal-sub').textContent = 'Vetëm me email institucional @aab-edu.net';
+    }
+  }
+
+  function apiOrigin() {
+    const origin = window.location.origin;
+    if (origin && origin !== 'null' && !origin.startsWith('file:') && /:8000$/.test(origin)) {
+      return origin;
+    }
+    return 'http://127.0.0.1:8000';
+  }
+
+  function apiError(detail) {
+    if (!detail) return 'Gabim i panjohur';
+    if (typeof detail === 'string') return detail;
+    if (Array.isArray(detail)) {
+      return detail.map(x => {
+        const field = x.loc && x.loc.length ? x.loc[x.loc.length - 1] : '';
+        if (x.type === 'missing' || x.msg === 'Field required') {
+          if (field === 'register_as') {
+            return 'Ringarko faqen (Ctrl+F5) dhe zgjidh regjistrimin si Student ose Profesor';
+          }
+          return field ? `Mungon fusha: ${field}` : 'Mungon një fushë e detyrueshme';
+        }
+        return x.msg || x.message || JSON.stringify(x);
+      }).join('. ');
+    }
+    return String(detail);
+  }
+
+  const STUDENT_EMAIL_SUFFIX = '@universitetiaab.com';
+  function isStudentEmail(email) {
+    return String(email || '').trim().toLowerCase().endsWith(STUDENT_EMAIL_SUFFIX);
+  }
+  const PROF_EMAIL_DOMAINS = ['aab-edu.net'];
+  const PROF_EMAIL_DOMAINS_LEGACY = ['aab-edu'];
+  function professorEmailDomain(email) {
+    const parts = String(email || '').trim().toLowerCase().split('@');
+    return parts.length === 2 && parts[1] ? parts[1] : '';
+  }
+  // Regjistrim: vetëm domain-i zyrtar (exact match).
+  function isProfessorRegisterEmail(email) {
+    return PROF_EMAIL_DOMAINS.includes(professorEmailDomain(email));
+  }
+  // Kyçje: pranon edhe domain-in legacy të llogarive ekzistuese.
+  function isProfessorEmail(email) {
+    const domain = professorEmailDomain(email);
+    return PROF_EMAIL_DOMAINS.includes(domain) || PROF_EMAIL_DOMAINS_LEGACY.includes(domain);
+  }
+  function registerRoleFromEmail(email) {
+    if (isStudentEmail(email)) return 'student';
+    if (isProfessorRegisterEmail(email)) return 'professor';
+    return null;
+  }
+  function saveAuthAndRedirect(data) {
+    const role = data.user?.role || 'student';
+    let tokenKey, userKey, dest;
+    if (role === 'professor') {
+      tokenKey = 'prof_token'; userKey = 'prof_user'; dest = 'profesor.html';
+    } else if (role === 'admin') {
+      tokenKey = 'admin_token'; userKey = 'admin_user'; dest = 'admin.html';
+    } else {
+      tokenKey = 'stu_token'; userKey = 'stu_user'; dest = 'student.html';
+    }
+    localStorage.setItem(tokenKey, data.access_token);
+    localStorage.setItem(userKey, JSON.stringify(data.user));
+    window.location.href = dest;
   }
 
   async function doLogin() {
@@ -725,67 +850,125 @@
     const password = document.getElementById('l-password').value;
     const msg      = document.getElementById('login-msg');
     if(!username||!password){ showMsg(msg,'Plotëso të dy fushat','#C63F3F'); return; }
+    if (username.includes('@')) {
+      const okStudent = isStudentEmail(username);
+      const okProfessor = isProfessorEmail(username);
+      if (!okStudent && !okProfessor) {
+        showMsg(msg,'Përdor email @universitetiaab.com (student) ose @aab-edu.net (profesor)','#C63F3F');
+        return;
+      }
+    }
+    showMsg(msg,'Duke u lidhur...','#666');
     try {
-      const backendOrigin = (() => {
-        const origin = window.location.origin;
-        if (origin && origin !== 'null' && origin.includes(':8000')) return origin;
-        return 'http://localhost:8000';
-      })();
-      const apiBase = `${backendOrigin}/api`;
+      const apiBase = `${apiOrigin()}/api`;
       const res  = await fetch(`${apiBase}/auth/login`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
-      const data = await res.json();
-      if(!res.ok){ showMsg(msg, data.detail||'Kredenciale të gabuara','#C63F3F'); return; }
-      let tokenKey, userKey;
-      if (data.user.role === 'professor') { tokenKey = 'prof_token'; userKey = 'prof_user'; }
-      else if (data.user.role === 'admin') { tokenKey = 'admin_token'; userKey = 'admin_user'; }
-      else { tokenKey = 'student_token'; userKey = 'student_user'; }
-      localStorage.setItem(tokenKey, data.access_token);
-      localStorage.setItem(userKey, JSON.stringify(data.user));
-
-      // Domain-based redirect rules (user requested):
-      const identifier = username; // value entered by user (username or email)
-      const email = (data.user && data.user.email) ? data.user.email.toLowerCase() : identifier.toLowerCase();
-      if (data.user.role === 'admin' || data.user.username === 'admin') {
-        window.location.href = 'admin.html';
-        return;
-      }
-      if (email.endsWith('@universitetiaab.com')) {
-        window.location.href = 'student.html';
-        return;
-      }
-      if (email.endsWith('@aab.edu') || email.endsWith('@aab.edu.al')) {
-        window.location.href = 'profesor.html';
-        return;
-      }
-      // Fallback to role-based routing
-      window.location.href = data.user.role === 'professor' ? 'profesor.html' : 'index.html';
-    } catch { showMsg(msg,'Nuk u lidh me serverin.','#C63F3F'); }
+      let data = {};
+      try { data = await res.json(); } catch (_) {}
+      if(!res.ok){ showMsg(msg, apiError(data.detail)||'Kredenciale të gabuara','#C63F3F'); return; }
+      saveAuthAndRedirect(data);
+    } catch (err) {
+      showMsg(msg,'Nuk u lidh me serverin. Nis start.bat dhe hap http://127.0.0.1:8000','#C63F3F');
+    }
   }
 
-  async function doRegister() {
-    const fname = document.getElementById('r-fname').value.trim();
-    const lname = document.getElementById('r-lname').value.trim();
-    const email = document.getElementById('r-email').value.trim();
-    const dept  = document.getElementById('r-dept').value;
-    const pass  = document.getElementById('r-pass').value;
-    const msg   = document.getElementById('reg-msg');
-    if(!fname||!lname||!email||!pass){ showMsg(msg,'Plotëso fushat e detyrueshme','#C63F3F'); return; }
-    if(pass.length<8){ showMsg(msg,'Min. 8 karaktere fjalëkalimi','#C63F3F'); return; }
+  async function doForgotPassword() {
+    const email = document.getElementById('fp-email').value.trim();
+    const msg = document.getElementById('forgot-msg');
+    if (!email || !email.includes('@')) {
+      showMsg(msg, 'Shkruaj email-in e llogarisë', '#C63F3F');
+      return;
+    }
+    showMsg(msg, 'Duke dërguar...', '#666');
     try {
-      const backendOrigin = (() => {
-        const origin = window.location.origin;
-        if (origin && origin !== 'null' && origin.includes(':8000')) return origin;
-        return 'http://localhost:8000';
-      })();
-      const apiBase = `${backendOrigin}/api`;
-      const res  = await fetch(`${apiBase}/auth/register`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:email.split('@')[0],email,full_name:fname+' '+lname,password:pass,department:dept||null})});
+      const res = await fetch(`${apiOrigin()}/api/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showMsg(msg, apiError(data.detail) || 'Gabim gjatë dërgimit', '#C63F3F');
+        return;
+      }
+      let text = data.message || 'Kontrollo email-in për lidhjen e rivendosjes.';
+      if (data.dev_reset_url) {
+        text += ' (Dev: shiko logs/password_reset.log ose kopjo lidhjen nga përgjigja e API)';
+        console.info('Dev reset URL:', data.dev_reset_url);
+      }
+      showMsg(msg, text, '#2D7A3A');
+    } catch {
+      showMsg(msg, 'Nuk u lidh me serverin.', '#C63F3F');
+    }
+  }
+
+  async function doRegisterStudent() {
+    const fname = document.getElementById('rs-fname').value.trim();
+    const lname = document.getElementById('rs-lname').value.trim();
+    const email = document.getElementById('rs-email').value.trim();
+    const dept  = document.getElementById('rs-dept').value;
+    const pass  = document.getElementById('rs-pass').value;
+    const msg   = document.getElementById('reg-stu-msg');
+    if (!fname || !lname || !email || !pass) { showMsg(msg, 'Plotëso fushat e detyrueshme', '#C63F3F'); return; }
+    if (!isStudentEmail(email)) { showMsg(msg, 'Studentët regjistrohen vetëm me email @universitetiaab.com', '#C63F3F'); return; }
+    if (!dept) { showMsg(msg, 'Studentët duhet të zgjedhin drejtimin / specializimin', '#C63F3F'); return; }
+    if (pass.length < 8) { showMsg(msg, 'Min. 8 karaktere fjalëkalimi', '#C63F3F'); return; }
+    showMsg(msg, 'Duke u regjistruar...', '#666');
+    try {
+      const apiBase = `${apiOrigin()}/api`;
+      const res = await fetch(`${apiBase}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: email.split('@')[0],
+          email,
+          full_name: fname + ' ' + lname,
+          password: pass,
+          department: dept || null,
+          register_as: 'student',
+        }),
+      });
       const data = await res.json();
-      if(!res.ok){ showMsg(msg, data.detail||'Gabim gjatë regjistrimit','#C63F3F'); return; }
-      switchTab('login');
-      const lm=document.getElementById('login-msg');
-      lm.style.display='block'; lm.style.color='#2D7A3A';
-      lm.textContent='✓ Llogaria u krijua! Hyr tani.';
-    } catch { showMsg(msg,'Nuk u lidh me serverin.','#C63F3F'); }
+      if (!res.ok) { showMsg(msg, apiError(data.detail) || 'Gabim gjatë regjistrimit', '#C63F3F'); return; }
+      if (data.user?.role !== 'student') { showMsg(msg, 'Llogaria u krijua me rol të gabuar. Kontaktoni adminin.', '#C63F3F'); return; }
+      saveAuthAndRedirect(data);
+    } catch {
+      showMsg(msg, 'Nuk u lidh me serverin. Nis start.bat dhe hap http://127.0.0.1:8000', '#C63F3F');
+    }
+  }
+
+  async function doRegisterProfessor() {
+    const fname = document.getElementById('rp-fname').value.trim();
+    const lname = document.getElementById('rp-lname').value.trim();
+    const email = document.getElementById('rp-email').value.trim();
+    const dept  = document.getElementById('rp-dept').value;
+    const pass  = document.getElementById('rp-pass').value;
+    const msg   = document.getElementById('reg-prof-msg');
+    if (!fname || !lname || !email || !pass) { showMsg(msg, 'Plotëso fushat e detyrueshme', '#C63F3F'); return; }
+    if (!isProfessorRegisterEmail(email)) { showMsg(msg, 'Profesorët regjistrohen vetëm me email me domain @aab-edu.net', '#C63F3F'); return; }
+    if (!dept) { showMsg(msg, 'Profesorët duhet të zgjedhin departamentin', '#C63F3F'); return; }
+    if (pass.length < 8) { showMsg(msg, 'Min. 8 karaktere fjalëkalimi', '#C63F3F'); return; }
+    showMsg(msg, 'Duke u regjistruar...', '#666');
+    try {
+      const apiBase = `${apiOrigin()}/api`;
+      const res = await fetch(`${apiBase}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: email.split('@')[0],
+          email,
+          full_name: fname + ' ' + lname,
+          password: pass,
+          department: dept,
+          register_as: 'professor',
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) { showMsg(msg, apiError(data.detail) || 'Gabim gjatë regjistrimit', '#C63F3F'); return; }
+      if (data.user?.role !== 'professor') { showMsg(msg, 'Llogaria u krijua me rol të gabuar. Kontaktoni adminin.', '#C63F3F'); return; }
+      saveAuthAndRedirect(data);
+    } catch {
+      showMsg(msg, 'Nuk u lidh me serverin. Nis start.bat dhe hap http://127.0.0.1:8000', '#C63F3F');
+    }
   }
 
   function showMsg(el, text, color) { el.textContent=text; el.style.display='block'; el.style.color=color; }
@@ -796,6 +979,36 @@
       e.preventDefault(); document.querySelector(id)?.scrollIntoView({behavior:'smooth'});
     });
   });
+
+  async function loadDepartmentOptions() {
+    const studentSel = document.getElementById('rs-dept');
+    const profSel = document.getElementById('rp-dept');
+    const origin = apiOrigin();
+    try {
+      if (studentSel) {
+        const res = await fetch(`${origin}/api/departments?for=student`);
+        const data = await res.json();
+        const depts = data.departments || [];
+        studentSel.innerHTML = '<option value="">— Zgjidh drejtimin —</option>' +
+          depts.map((d) => `<option>${d.replace(/</g, '&lt;')}</option>`).join('');
+      }
+      if (profSel) {
+        const res = await fetch(`${origin}/api/departments?for=professor`);
+        const data = await res.json();
+        const depts = data.departments || ['Shkenca Kompjuterike'];
+        profSel.innerHTML = '<option value="">— Zgjidh departamentin —</option>' +
+          depts.map((d) => `<option>${d.replace(/</g, '&lt;')}</option>`).join('');
+      }
+    } catch {}
+  }
+  loadDepartmentOptions();
 </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function () {});
+      });
+    }
+  </script>
 </body>
 </html>
